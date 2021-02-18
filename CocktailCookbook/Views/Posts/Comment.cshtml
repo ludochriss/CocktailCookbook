@@ -1,0 +1,10 @@
+﻿@model CocktailCookbook.Models.Comment
+
+<h4>This is a comment</h4>
+
+<label asp-for=@Model.Content></label>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
