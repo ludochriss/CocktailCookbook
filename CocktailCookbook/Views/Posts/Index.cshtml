@@ -43,16 +43,23 @@
                 @Html.DisplayFor(modelItem => item.TimeCreated)
             </td>
             <td>
-                @*make the number of comments a number and if the number is greater than 0 be able to click on it and navigate to the necessary*@ 
+                @*make the number of comments a number and if the number is greater than 0 be able to click on it and navigate to the necessary*@
                 <a asp-action="ViewThread" asp-route-id="@item.Id">Comments</a>
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Author)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                @if (ViewBag.isAuthor.NickName == item.Author)
+                {
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete   |</a> 
+                    
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit   |</a>
+
+                }
+
                 <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a> |
+
                 <a asp-action="Reply" asp-route-id="@item.Id">Reply</a>
             </td>
         </tr>

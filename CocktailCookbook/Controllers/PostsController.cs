@@ -25,8 +25,16 @@ namespace CocktailCookbook.Controllers
         }
 
         // GET: Posts
+
+        //pass in id of user to check if the user is the same as the person who posted to edit posts
+        //only person who created post can delete it 
         public async Task<IActionResult> Index()
         {
+           var userId =  User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+          
+            ViewBag.isAuthor = await _context.Staff.FirstOrDefaultAsync(s => s.UserId == userId);
+
             return View(await _context.Post.ToListAsync());
         }
 
@@ -177,6 +185,7 @@ namespace CocktailCookbook.Controllers
 
             var p = await _context.Post.FirstOrDefaultAsync(p => p.Id == id);
             ViewBag.OriginalAuthor = p.Author;
+            ViewBag.OriginalPost = p.Content;
             var c = new Comment
             {
                 Author = author.NickName,
@@ -217,6 +226,7 @@ namespace CocktailCookbook.Controllers
 
             var post = await _context.Post.FirstOrDefaultAsync(p => p.Id == id);
 
+            ViewBag.OriginalAuthor = post.Author;
 
             var comments = await _context.Comment.
                 Where(c=>c.PostId ==id)

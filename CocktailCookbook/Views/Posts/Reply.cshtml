@@ -7,7 +7,7 @@
 
 <h1>Reply</h1>
 
-<h4>Comment</h4>
+
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -19,13 +19,13 @@
 
             </div>
             <div class="form-group">
-                <label class="control-label">Replying to @ViewBag.OriginalAuthor </label>
+                <label class="control-label">Replying to @ViewBag.OriginalAuthor on : @ViewBag.OriginalPost </label>
                 <input asp-for="PostId" class="form-control" value="@Model.PostId" hidden/>
 
                
             </div>
             <div class="form-group">
-                <label asp-for="Content" class="control-label">Comment</label>
+                <label asp-for="Content" class="control-label">Comments</label>
                 <textarea asp-for="Content" class="form-control"></textarea>
 
                 <span asp-validation-for="Content" class="text-danger"></span>
