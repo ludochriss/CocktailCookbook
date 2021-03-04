@@ -5,10 +5,12 @@ using System.Threading.Tasks;
 
 namespace CocktailCookbook.Models
 {
-    public class Recipe
+    public  class Ingredient
     {
-        public string Ingredients;
+        public int Id { get; set; }
+        public string Name { get; set; }
 
-        public string Method;
+        public string Unit { get; set; }
+
     }
 }

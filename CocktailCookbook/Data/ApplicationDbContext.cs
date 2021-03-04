@@ -16,8 +16,13 @@ namespace CocktailCookbook.Data
         public DbSet<CocktailCookbook.Models.Post> Post { get; set; }
         public DbSet<Models.User> Staff { get; set; }
 
-        public Recipe Recipes { get; set; }
+       
         public Cocktail Cocktails { get; set; }
         public DbSet<CocktailCookbook.Models.Comment> Comment { get; set; }
+        public DbSet<CocktailCookbook.Models.Cocktail> Cocktail { get; set; }
+        public DbSet<CocktailCookbook.Models.CocktailIngredient> CocktailIngredient { get; set; }
+        public DbSet<CocktailCookbook.Models.Ingredient> Ingredient { get; set; }
+
+    
     }
 }

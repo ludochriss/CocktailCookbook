@@ -10,16 +10,42 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CocktailCookbook.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210217033336_initial")]
+    [Migration("20210304024255_initial")]
     partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.11")
+                .HasAnnotation("ProductVersion", "3.1.12")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+            modelBuilder.Entity("CocktailCookbook.Models.Cocktail", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("CreatorUserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Garnish")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Glassware")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Method")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatorUserId");
+
+                    b.ToTable("Cocktail");
+                });
 
             modelBuilder.Entity("CocktailCookbook.Models.Comment", b =>
                 {
@@ -283,6 +309,13 @@ namespace CocktailCookbook.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens");
+                });
+
+            modelBuilder.Entity("CocktailCookbook.Models.Cocktail", b =>
+                {
+                    b.HasOne("CocktailCookbook.Models.User", "Creator")
+                        .WithMany()
+                        .HasForeignKey("CreatorUserId");
                 });
 
             modelBuilder.Entity("CocktailCookbook.Models.Comment", b =>

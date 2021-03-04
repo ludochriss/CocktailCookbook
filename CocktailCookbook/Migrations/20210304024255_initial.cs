@@ -202,6 +202,28 @@ namespace CocktailCookbook.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Cocktail",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Method = table.Column<string>(nullable: true),
+                    Glassware = table.Column<string>(nullable: true),
+                    Garnish = table.Column<string>(nullable: true),
+                    CreatorUserId = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Cocktail", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Cocktail_Staff_CreatorUserId",
+                        column: x => x.CreatorUserId,
+                        principalTable: "Staff",
+                        principalColumn: "UserId",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -242,6 +264,11 @@ namespace CocktailCookbook.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Cocktail_CreatorUserId",
+                table: "Cocktail",
+                column: "CreatorUserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Comment_PostId",
                 table: "Comment",
                 column: "PostId");
@@ -265,16 +292,19 @@ namespace CocktailCookbook.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Comment");
+                name: "Cocktail");
 
             migrationBuilder.DropTable(
-                name: "Staff");
+                name: "Comment");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "Staff");
 
             migrationBuilder.DropTable(
                 name: "Post");
