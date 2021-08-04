@@ -25,19 +25,21 @@ namespace CocktailCookbook.Areas.Identity.Pages.Account
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
         private readonly ApplicationDbContext _context;
+        //private readonly RoleManager<IdentityRole> _roleManager;
 
         public RegisterModel(
             UserManager<IdentityUser> userManager,
             SignInManager<IdentityUser> signInManager,
             ILogger<RegisterModel> logger,
             IEmailSender emailSender,
-            ApplicationDbContext context)
+            ApplicationDbContext context/*, RoleManager<IdentityRole> roleManager*/)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
             _context = context;
+            //_roleManager = roleManager;
         }
 
         [BindProperty]
@@ -79,6 +81,8 @@ namespace CocktailCookbook.Areas.Identity.Pages.Account
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
+            //TODO: Add role of user and role of admin if necessary
+
             returnUrl = returnUrl ?? Url.Content("~/");
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
@@ -97,11 +101,23 @@ namespace CocktailCookbook.Areas.Identity.Pages.Account
                         UserId = user.Id
 
                     };
+
+
+                    //TODO: create an admin class that can handle role assignment and creation
+                    //bool exists = await _roleManager.RoleExistsAsync("User");
+                    //if (exists == false)
+                    //{
+                    //    IdentityRole idRole = new IdentityRole
+                    //    {
+                    //        Name = "User"
+                    //    };
+                    //   await  _context.Roles.AddAsync(idRole);
+                    //}
+
+           
                       _context.Staff.Add(s);
                     await _context.SaveChangesAsync();
-
-
-
+                   
                     _logger.LogInformation("User created a new account with password.");
 
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);

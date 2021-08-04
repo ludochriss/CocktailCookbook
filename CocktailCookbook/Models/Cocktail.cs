@@ -9,8 +9,9 @@ namespace CocktailCookbook.Models
     public class Cocktail
     {
         public int Id { get; set; }
-       
+
         //cocktails need a list of ingredients that are contained in a CocktailIngredient Table that 
+        public string Name { get; set; }
         public string Method { get; set; }
 
         public string Glassware { get; set; }

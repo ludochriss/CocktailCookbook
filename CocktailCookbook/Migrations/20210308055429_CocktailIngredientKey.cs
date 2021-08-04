@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace CocktailCookbook.Migrations
 {
-    public partial class initial : Migration
+    public partial class CocktailIngredientKey : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -44,6 +44,33 @@ namespace CocktailCookbook.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CocktailIngredient",
+                columns: table => new
+                {
+                    CocktailId = table.Column<int>(nullable: false),
+                    IngredientId = table.Column<string>(nullable: false),
+                    Quantity = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CocktailIngredient", x => new { x.CocktailId, x.IngredientId });
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Ingredient",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(nullable: true),
+                    Unit = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Ingredient", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -208,6 +235,7 @@ namespace CocktailCookbook.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(nullable: true),
                     Method = table.Column<string>(nullable: true),
                     Glassware = table.Column<string>(nullable: true),
                     Garnish = table.Column<string>(nullable: true),
@@ -295,7 +323,13 @@ namespace CocktailCookbook.Migrations
                 name: "Cocktail");
 
             migrationBuilder.DropTable(
+                name: "CocktailIngredient");
+
+            migrationBuilder.DropTable(
                 name: "Comment");
+
+            migrationBuilder.DropTable(
+                name: "Ingredient");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");

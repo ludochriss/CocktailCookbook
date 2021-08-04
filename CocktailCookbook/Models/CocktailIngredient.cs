@@ -10,7 +10,7 @@ namespace CocktailCookbook.Models
 
     public class CocktailIngredient
     {
-        public int Id { get; set; }
+       
         public int CocktailId { get; set; }
         public string IngredientId { get; set; }
 

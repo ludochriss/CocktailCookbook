@@ -31,9 +31,26 @@ namespace CocktailCookbook
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+                .AddEntityFrameworkStores<ApplicationDbContext>().AddSignInManager();
+
+            
+            //Adds functionality for the roles of the identity users.
+          
+            //usermanager class accepts a generic parameter
+
+            
             services.AddControllersWithViews();
-            services.AddRazorPages();
+            services.AddRazorPages()
+                .AddRazorRuntimeCompilation();
+            
+            services.AddAuthorization(o => 
+            {
+                o.AddPolicy
+                  ("UserOnly", p => p.RequireClaim("UserId")
+                  );
+                }
+            );
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

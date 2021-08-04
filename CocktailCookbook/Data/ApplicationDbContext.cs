@@ -23,6 +23,13 @@ namespace CocktailCookbook.Data
         public DbSet<CocktailCookbook.Models.CocktailIngredient> CocktailIngredient { get; set; }
         public DbSet<CocktailCookbook.Models.Ingredient> Ingredient { get; set; }
 
-    
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+            builder.Entity<CocktailIngredient>()
+                .HasKey(k => new { k.CocktailId, k.IngredientId });
+        }
+       
+
     }
 }

@@ -9,19 +9,26 @@ using CocktailCookbook.Data;
 using CocktailCookbook.Models;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CocktailCookbook.Controllers
 {
+
+    //TODO: allow admin roles to delete comments and/or threads
+
+   //[Authorize(Policy ="UserOnly")]
     public class PostsController : Controller
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<IdentityUser> _um;
+        private readonly SignInManager<IdentityUser> _sm;
        
 
-        public PostsController(ApplicationDbContext context, UserManager<IdentityUser> um)
+        public PostsController(ApplicationDbContext context, UserManager<IdentityUser> um, SignInManager<IdentityUser> sm)
         {
             _context = context;
             _um = um;
+                _sm =sm;
         }
 
         // GET: Posts
@@ -30,12 +37,24 @@ namespace CocktailCookbook.Controllers
         //only person who created post can delete it 
         public async Task<IActionResult> Index()
         {
-           var userId =  User.FindFirstValue(ClaimTypes.NameIdentifier);
+            //incase of bypassing with url, validates that 
+            
+            if (_sm.IsSignedIn(User))
+            {
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-          
-            ViewBag.isAuthor = await _context.Staff.FirstOrDefaultAsync(s => s.UserId == userId);
 
-            return View(await _context.Post.ToListAsync());
+                ViewBag.isAuthor = await _context.Staff.FirstOrDefaultAsync(s => s.UserId == userId);
+
+                return View(await _context.Post.ToListAsync());
+
+            }
+            else
+            {
+               return RedirectToAction(nameof(HomeController.Index));
+            }
+           
+
         }
 
         // GET: Posts/Details/5
@@ -78,11 +97,7 @@ namespace CocktailCookbook.Controllers
         public async Task<IActionResult> Create([Bind("Id,Title,Content,Author")] Post post)
         {
            
-             
             post.TimeCreated = DateTime.Now;
-           
-
-
             if (ModelState.IsValid)
             {
                 _context.Add(post);
@@ -119,7 +134,6 @@ namespace CocktailCookbook.Controllers
             {
                 return NotFound();
             }
-
             if (ModelState.IsValid)
             {
                 try
@@ -157,7 +171,6 @@ namespace CocktailCookbook.Controllers
             {
                 return NotFound();
             }
-
             return View(post);
         }
 
@@ -175,24 +188,34 @@ namespace CocktailCookbook.Controllers
         [HttpGet, ActionName("Reply")]
         public async Task<IActionResult> Reply(int? id)
         {
+            //check if the ID is null return not found page if true
             if (id == null)
             {
                 return NotFound();
             }
+            //find the current users id
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            //match with database 
             var author = _context.Staff.FirstOrDefault(s => s.UserId == userId);
 
-
+            //bring the post from the database
             var p = await _context.Post.FirstOrDefaultAsync(p => p.Id == id);
+
+
+            //get the comments associated with the posts and store them in a list to be passed to the viewmodel
+            List<Comment> postComments =await  _context.Comment.Where(c => c.PostId == id).ToListAsync();
+            //pass original post data to the view via viewbag/ create new comment, with the data from the current user
             ViewBag.OriginalAuthor = p.Author;
             ViewBag.OriginalPost = p.Content;
-            var c = new Comment
+            
+            var c = new ReplyCommentViewModel
             {
                 Author = author.NickName,
-                PostId = p.Id
-               
+                PostId = p.Id,
+                Comments = postComments
             };
-
+     
+         
             return View(c);
         }
         [HttpPost, ActionName("Reply")]

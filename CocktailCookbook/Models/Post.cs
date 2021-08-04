@@ -8,6 +8,8 @@ namespace CocktailCookbook.Models
 {
     public class Post
     {
+
+        //potentially, post could inherit from comment and stop duplication of data
         public int Id { get; set; }
         [Display(Name ="Post Subject")]
         public string Title { get; set; }
@@ -21,7 +23,7 @@ namespace CocktailCookbook.Models
         public string Author { get; set; }
 
        
-        public ICollection<Comment> Comments { get; set; }
+        public List<Comment> Comments { get; set; }
 
     }
 }

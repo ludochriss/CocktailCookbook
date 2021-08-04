@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using CocktailCookbook.Data;
 using CocktailCookbook.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CocktailCookbook.Controllers
 {
+    //[Authorize(Policy ="UserOnly")]
     public class CocktailsController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -40,12 +42,16 @@ namespace CocktailCookbook.Controllers
                 return NotFound();
             }
 
+
+
+           
             return View(cocktail);
         }
 
         // GET: Cocktails/Create
         public IActionResult Create()
         {
+            ViewBag.Ingredients =  _context.Ingredient.ToList();
             return View();
         }
 
@@ -54,7 +60,7 @@ namespace CocktailCookbook.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Method,Glassware,Garnish")] Cocktail cocktail)
+        public async Task<IActionResult> Create([Bind("Id,Name,Method,Glassware,Garnish")] Cocktail cocktail,CocktailIngredient ci)
         {
             if (ModelState.IsValid)
             {
@@ -86,7 +92,7 @@ namespace CocktailCookbook.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Method,Glassware,Garnish")] Cocktail cocktail)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Method,Glassware,Garnish")] Cocktail cocktail)
         {
             if (id != cocktail.Id)
             {
@@ -145,6 +151,11 @@ namespace CocktailCookbook.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        public async Task<IActionResult> AddIngredientsToCocktail()
+        {
+
+            return View("_IngredientPartial");
+        }
         private bool CocktailExists(int id)
         {
             return _context.Cocktail.Any(e => e.Id == id);

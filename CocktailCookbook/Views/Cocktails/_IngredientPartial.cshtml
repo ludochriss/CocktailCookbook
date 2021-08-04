@@ -1,0 +1,61 @@
+﻿@model IEnumerable<CocktailCookbook.Models.Ingredient>
+
+
+<p>Can't find the ingredient you're looking for? Click <a asp-controller="Ingredients" asp-action="Create">here</a> to add it!</p>
+
+
+
+
+<h1>Available Ingredients</h1>
+@{if (ViewBag.Ingredients != null)
+    {
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Name)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Unit)
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in ViewBag.Ingredients)
+                {
+                    <tr>
+                        <td>
+                            @item.Name
+                        </td>
+                        <td>
+                            @item.Unit
+                        </td>
+                        <td>
+                            @*need to add to be add ingredient and then determine the amount*@
+
+                            @*todo: need to add functionality so that an ingredient can be added to a cocktailIngredient List and then be added to the database*@
+
+                            <label>Add to recipe </label>
+                            <input type="checkbox" id="@item.Id" />
+
+                        </td>
+                    </tr>
+
+                }
+
+            </tbody>
+        </table>
+
+    }
+
+
+
+    else
+    {
+        <p>There are no ingredients listed in the database</p>
+    }
+
+}
+  

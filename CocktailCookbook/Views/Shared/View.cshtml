@@ -1,11 +1,4 @@
-﻿@model IEnumerable<CocktailCookbook.Models.Cocktail>
-
-@{
-    ViewData["Title"] = "Index";
-    Layout = "~/Views/Shared/_Layout.cshtml";
-}
-
-<h1>Index</h1>
+﻿@model IEnumerable<CocktailCookbook.Models.Comment>
 
 <p>
     <a asp-action="Create">Create New</a>
@@ -14,16 +7,13 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Name)
+                @Html.DisplayNameFor(model => model.Author)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Method)
+                @Html.DisplayNameFor(model => model.Time)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Glassware)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Garnish)
+                @Html.DisplayNameFor(model => model.Content)
             </th>
             <th></th>
         </tr>
@@ -32,16 +22,13 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Name)
+                @Html.DisplayFor(modelItem => item.Author)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Method)
+                @Html.DisplayFor(modelItem => item.Time)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Glassware)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Garnish)
+                @Html.DisplayFor(modelItem => item.Content)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |

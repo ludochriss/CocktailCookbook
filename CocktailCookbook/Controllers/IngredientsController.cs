@@ -42,7 +42,7 @@ namespace CocktailCookbook.Controllers
 
             return View(ingredient);
         }
-
+        //when navigating from the u
         // GET: Ingredients/Create
         public IActionResult Create()
         {

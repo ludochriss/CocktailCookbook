@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CocktailCookbook.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210304024255_initial")]
-    partial class initial
+    [Migration("20210308055429_CocktailIngredientKey")]
+    partial class CocktailIngredientKey
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -40,11 +40,30 @@ namespace CocktailCookbook.Migrations
                     b.Property<string>("Method")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CreatorUserId");
 
                     b.ToTable("Cocktail");
+                });
+
+            modelBuilder.Entity("CocktailCookbook.Models.CocktailIngredient", b =>
+                {
+                    b.Property<int>("CocktailId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("IngredientId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Quantity")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("CocktailId", "IngredientId");
+
+                    b.ToTable("CocktailIngredient");
                 });
 
             modelBuilder.Entity("CocktailCookbook.Models.Comment", b =>
@@ -69,6 +88,24 @@ namespace CocktailCookbook.Migrations
                     b.HasIndex("PostId");
 
                     b.ToTable("Comment");
+                });
+
+            modelBuilder.Entity("CocktailCookbook.Models.Ingredient", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Unit")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Ingredient");
                 });
 
             modelBuilder.Entity("CocktailCookbook.Models.Post", b =>
