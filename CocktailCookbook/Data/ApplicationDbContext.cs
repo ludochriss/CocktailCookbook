@@ -22,6 +22,9 @@ namespace CocktailCookbook.Data
         public DbSet<CocktailCookbook.Models.Cocktail> Cocktail { get; set; }
         public DbSet<CocktailCookbook.Models.CocktailIngredient> CocktailIngredient { get; set; }
         public DbSet<CocktailCookbook.Models.Ingredient> Ingredient { get; set; }
+        public DbSet<CompletedJob> CompletedJobs { get; set; }
+
+        public DbSet<Job> Tasks { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

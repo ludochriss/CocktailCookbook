@@ -1,0 +1,43 @@
+﻿@model IEnumerable<CocktailCookbook.Models.Job>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Task name
+            </th>
+            <th>
+                Time Created
+            </th>
+            <th>
+               Description
+            </th>
+            <th>Task created by </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+               @(item.TimeCreated.ToShortTimeString()) @item.TimeCreated.ToShortDateString()
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TaskDescription)
+            </td>
+            <td>@Html.DisplayFor(modelItem => item.Creator)</td>
+            <td>
+               
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

@@ -4,14 +4,16 @@ using CocktailCookbook.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace CocktailCookbook.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210804134949_jobNameChange")]
+    partial class jobNameChange
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -116,9 +118,11 @@ namespace CocktailCookbook.Migrations
                     b.Property<string>("CreatorUserId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("Discriminator")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<bool>("IsComplete")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("MarkedComplete")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
@@ -134,8 +138,6 @@ namespace CocktailCookbook.Migrations
                     b.HasIndex("CreatorUserId");
 
                     b.ToTable("Tasks");
-
-                    b.HasDiscriminator<string>("Discriminator").HasValue("Job");
                 });
 
             modelBuilder.Entity("CocktailCookbook.Models.Post", b =>
@@ -376,16 +378,6 @@ namespace CocktailCookbook.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens");
-                });
-
-            modelBuilder.Entity("CocktailCookbook.Models.CompletedJob", b =>
-                {
-                    b.HasBaseType("CocktailCookbook.Models.Job");
-
-                    b.Property<DateTime>("TimeCompleted")
-                        .HasColumnType("datetime2");
-
-                    b.HasDiscriminator().HasValue("CompletedJob");
                 });
 
             modelBuilder.Entity("CocktailCookbook.Models.Cocktail", b =>

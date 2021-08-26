@@ -7,27 +7,26 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using CocktailCookbook.Data;
 using CocktailCookbook.Models;
-using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace CocktailCookbook.Controllers
 {
-    //[Authorize(Policy ="UserOnly")]
-    public class CocktailsController : Controller
+    public class JobsController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public CocktailsController(ApplicationDbContext context)
+        public JobsController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: Cocktails
+        // GET: Jobs
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Cocktail.ToListAsync());
+            return View(await _context.Tasks.ToListAsync());
         }
 
-        // GET: Cocktails/Details/5
+        // GET: Jobs/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -35,43 +34,41 @@ namespace CocktailCookbook.Controllers
                 return NotFound();
             }
 
-            var cocktail = await _context.Cocktail
+            var job = await _context.Tasks
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (cocktail == null)
+            if (job == null)
             {
                 return NotFound();
             }
 
-
-
-           
-            return View(cocktail);
+            return View(job);
         }
 
-        // GET: Cocktails/Create
+        // GET: Jobs/Create
         public IActionResult Create()
         {
-            ViewBag.Ingredients =  _context.Ingredient.ToList();
             return View();
         }
 
-        // POST: Cocktails/Create
+        // POST: Jobs/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Method,Glassware,Garnish")] Cocktail cocktail,CocktailIngredient ci)
+        public async Task<IActionResult> Create([Bind("Id,Name,TaskDescription")] Job job)
         {
+            job.TimeCreated = DateTime.Now;
+
             if (ModelState.IsValid)
             {
-                _context.Add(cocktail);
+                _context.Add(job);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(cocktail);
+            return View(job);
         }
 
-        // GET: Cocktails/Edit/5
+        // GET: Jobs/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -79,36 +76,40 @@ namespace CocktailCookbook.Controllers
                 return NotFound();
             }
 
-            var cocktail = await _context.Cocktail.FindAsync(id);
-            if (cocktail == null)
+            var job = await _context.Tasks.FindAsync(id);
+            if (job == null)
             {
                 return NotFound();
             }
-            return View(cocktail);
+            return View(job);
         }
 
-        // POST: Cocktails/Edit/5
+        // POST: Jobs/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Method,Glassware,Garnish")] Cocktail cocktail)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,TimeCreated,TaskDescription")] Job job)
         {
-            if (id != cocktail.Id)
+            if (id != job.Id)
             {
                 return NotFound();
             }
+            //find the current users id
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            //match with database 
+            job.Creator =await _context.Staff.FirstOrDefaultAsync(s => s.UserId == userId);
 
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(cocktail);
+                    _context.Update(job);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!CocktailExists(cocktail.Id))
+                    if (!JobExists(job.Id))
                     {
                         return NotFound();
                     }
@@ -119,10 +120,10 @@ namespace CocktailCookbook.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(cocktail);
+            return View(job);
         }
 
-        // GET: Cocktails/Delete/5
+        // GET: Jobs/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -130,35 +131,53 @@ namespace CocktailCookbook.Controllers
                 return NotFound();
             }
 
-            var cocktail = await _context.Cocktail
+            var job = await _context.Tasks
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (cocktail == null)
+            if (job == null)
             {
                 return NotFound();
             }
 
-            return View(cocktail);
+            return View(job);
         }
 
-        // POST: Cocktails/Delete/5
+        // POST: Jobs/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var cocktail = await _context.Cocktail.FindAsync(id);
-            _context.Cocktail.Remove(cocktail);
+            var job = await _context.Tasks.FindAsync(id);
+            _context.Tasks.Remove(job);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+        public async Task<IActionResult> MarkComplete(int id)
 
-        public async Task<IActionResult> AddIngredientsToCocktail()
         {
+            var j = await _context.Tasks.FirstOrDefaultAsync(j => j.Id == id);
+            //draft new completed job, inherits from job
+            var c = new CompletedJob
+            {
+                Id = j.Id,
+                TaskDescription = j.TaskDescription,
+                Creator = j.Creator,
+                Name = j.Name,
+                TimeCompleted = DateTime.Now,
+                TimeCreated = j.TimeCreated
+            };
+            //add the completed job to the database and remove the task from the tasks list, save changes.
+            _context.CompletedJobs.Add(c);
+
+            _context.Tasks.Remove(j);
             await _context.SaveChangesAsync();
-            return View("_IngredientPartial");
+            
+
+            return RedirectToAction(nameof(Index));
         }
-        private bool CocktailExists(int id)
+
+        private bool JobExists(int id)
         {
-            return _context.Cocktail.Any(e => e.Id == id);
+            return _context.Tasks.Any(e => e.Id == id);
         }
     }
 }
