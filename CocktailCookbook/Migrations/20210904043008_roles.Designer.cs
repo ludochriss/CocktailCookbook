@@ -10,16 +10,39 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CocktailCookbook.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210308055429_CocktailIngredientKey")]
-    partial class CocktailIngredientKey
+    [Migration("20210904043008_roles")]
+    partial class roles
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.12")
+                .HasAnnotation("ProductVersion", "3.1.18")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+            modelBuilder.Entity("CocktailCookbook.Models.Authorisation", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<bool>("IsAuthorised")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("RoleId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("Authorisation");
+                });
 
             modelBuilder.Entity("CocktailCookbook.Models.Cocktail", b =>
                 {
@@ -108,6 +131,38 @@ namespace CocktailCookbook.Migrations
                     b.ToTable("Ingredient");
                 });
 
+            modelBuilder.Entity("CocktailCookbook.Models.Job", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("CreatorUserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TaskDescription")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("TimeCreated")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatorUserId");
+
+                    b.ToTable("Tasks");
+
+                    b.HasDiscriminator<string>("Discriminator").HasValue("Job");
+                });
+
             modelBuilder.Entity("CocktailCookbook.Models.Post", b =>
                 {
                     b.Property<int>("Id")
@@ -130,6 +185,21 @@ namespace CocktailCookbook.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Post");
+                });
+
+            modelBuilder.Entity("CocktailCookbook.Models.Role", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("RoleName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Role");
                 });
 
             modelBuilder.Entity("CocktailCookbook.Models.User", b =>
@@ -348,6 +418,28 @@ namespace CocktailCookbook.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
+            modelBuilder.Entity("CocktailCookbook.Models.CompletedJob", b =>
+                {
+                    b.HasBaseType("CocktailCookbook.Models.Job");
+
+                    b.Property<string>("MarkedCompleteByUserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("TimeCompleted")
+                        .HasColumnType("datetime2");
+
+                    b.HasIndex("MarkedCompleteByUserId");
+
+                    b.HasDiscriminator().HasValue("CompletedJob");
+                });
+
+            modelBuilder.Entity("CocktailCookbook.Models.Authorisation", b =>
+                {
+                    b.HasOne("CocktailCookbook.Models.Role", null)
+                        .WithMany("Authorisations")
+                        .HasForeignKey("RoleId");
+                });
+
             modelBuilder.Entity("CocktailCookbook.Models.Cocktail", b =>
                 {
                     b.HasOne("CocktailCookbook.Models.User", "Creator")
@@ -362,6 +454,13 @@ namespace CocktailCookbook.Migrations
                         .HasForeignKey("PostId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("CocktailCookbook.Models.Job", b =>
+                {
+                    b.HasOne("CocktailCookbook.Models.User", "Creator")
+                        .WithMany()
+                        .HasForeignKey("CreatorUserId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -413,6 +512,13 @@ namespace CocktailCookbook.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("CocktailCookbook.Models.CompletedJob", b =>
+                {
+                    b.HasOne("CocktailCookbook.Models.User", "MarkedCompleteBy")
+                        .WithMany()
+                        .HasForeignKey("MarkedCompleteByUserId");
                 });
 #pragma warning restore 612, 618
         }

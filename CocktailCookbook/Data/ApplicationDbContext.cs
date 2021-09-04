@@ -16,7 +16,7 @@ namespace CocktailCookbook.Data
         public DbSet<CocktailCookbook.Models.Post> Post { get; set; }
         public DbSet<Models.User> Staff { get; set; }
 
-       
+
         public Cocktail Cocktails { get; set; }
         public DbSet<CocktailCookbook.Models.Comment> Comment { get; set; }
         public DbSet<CocktailCookbook.Models.Cocktail> Cocktail { get; set; }
@@ -31,8 +31,14 @@ namespace CocktailCookbook.Data
             base.OnModelCreating(builder);
             builder.Entity<CocktailIngredient>()
                 .HasKey(k => new { k.CocktailId, k.IngredientId });
-        }
-       
 
+            //builder.Entity<CompletedJob>().ToTable("CompletedJob");
+            //builder.Entity<Job>().ToTable("Job");
+            //attempting to model the jobs inheritance tree
+        }
+
+        public DbSet<CocktailCookbook.Models.Authorisation> Authorisation { get; set; }
+
+        public DbSet<CocktailCookbook.Models.Role> Role { get; set; }
     }
 }

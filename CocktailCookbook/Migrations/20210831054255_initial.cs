@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace CocktailCookbook.Migrations
 {
-    public partial class CocktailIngredientKey : Migration
+    public partial class initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -252,6 +252,37 @@ namespace CocktailCookbook.Migrations
                         onDelete: ReferentialAction.Restrict);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Tasks",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(nullable: true),
+                    CreatorUserId = table.Column<string>(nullable: true),
+                    TimeCreated = table.Column<DateTime>(nullable: false),
+                    TaskDescription = table.Column<string>(nullable: true),
+                    Discriminator = table.Column<string>(nullable: false),
+                    TimeCompleted = table.Column<DateTime>(nullable: true),
+                    MarkedCompleteByUserId = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Tasks", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Tasks_Staff_MarkedCompleteByUserId",
+                        column: x => x.MarkedCompleteByUserId,
+                        principalTable: "Staff",
+                        principalColumn: "UserId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Tasks_Staff_CreatorUserId",
+                        column: x => x.CreatorUserId,
+                        principalTable: "Staff",
+                        principalColumn: "UserId",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -300,6 +331,16 @@ namespace CocktailCookbook.Migrations
                 name: "IX_Comment_PostId",
                 table: "Comment",
                 column: "PostId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Tasks_MarkedCompleteByUserId",
+                table: "Tasks",
+                column: "MarkedCompleteByUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Tasks_CreatorUserId",
+                table: "Tasks",
+                column: "CreatorUserId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -332,16 +373,19 @@ namespace CocktailCookbook.Migrations
                 name: "Ingredient");
 
             migrationBuilder.DropTable(
+                name: "Tasks");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
 
             migrationBuilder.DropTable(
-                name: "Staff");
+                name: "Post");
 
             migrationBuilder.DropTable(
-                name: "Post");
+                name: "Staff");
         }
     }
 }

@@ -8,21 +8,28 @@ using Microsoft.EntityFrameworkCore;
 using CocktailCookbook.Data;
 using CocktailCookbook.Models;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Identity;
 
 namespace CocktailCookbook.Controllers
 {
     public class JobsController : Controller
     {
         private readonly ApplicationDbContext _context;
-
-        public JobsController(ApplicationDbContext context)
+        private readonly UserManager<IdentityUser> _um;
+        private readonly SignInManager<IdentityUser> _sm;
+        public JobsController(ApplicationDbContext context, UserManager<IdentityUser> um, SignInManager<IdentityUser> sm)
         {
             _context = context;
+            _um = um;
+            _sm = sm;
         }
 
         // GET: Jobs
         public async Task<IActionResult> Index()
         {
+           ViewBag.CompleteJobs =await _context.Tasks.OfType<CompletedJob>().ToListAsync();
+
+         
             return View(await _context.Tasks.ToListAsync());
         }
 
@@ -67,6 +74,7 @@ namespace CocktailCookbook.Controllers
             }
             return View(job);
         }
+
 
         // GET: Jobs/Edit/5
         public async Task<IActionResult> Edit(int? id)
@@ -151,10 +159,17 @@ namespace CocktailCookbook.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
-        public async Task<IActionResult> MarkComplete(int id)
+        public async Task<IActionResult> MarkComplete(int? id)
 
-        {
+        { 
+            //find the user Id for the signed in user
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);                  
             var j = await _context.Tasks.FirstOrDefaultAsync(j => j.Id == id);
+
+            //add the completed job to the database and remove the task from the tasks list, save changes.
+
+            //search database for the staff members details
+            var markedCompleteBy = await _context.Staff.FirstOrDefaultAsync(s => s.UserId == userId);
             //draft new completed job, inherits from job
             var c = new CompletedJob
             {
@@ -163,17 +178,40 @@ namespace CocktailCookbook.Controllers
                 Creator = j.Creator,
                 Name = j.Name,
                 TimeCompleted = DateTime.Now,
+                TimeCreated = j.TimeCreated,
+                MarkedCompleteBy = markedCompleteBy
+
+            };
+            _context.Tasks.Remove(j);
+            _context.CompletedJobs.Add(c);
+         
+            await _context.SaveChangesAsync();
+
+
+            return RedirectToAction(nameof(Index), "Home");
+        }
+
+        //returns completed job to incomplete state.
+        public async Task<IActionResult> MarkedInError(int id)
+
+        {
+            var j = await _context.Tasks.FirstOrDefaultAsync(t => t.Id == id);
+            var nJ = new Job { 
+                Id = j.Id,
+                Name = j.Name,
+                TaskDescription = j.TaskDescription,
+                Creator = j.Creator,
                 TimeCreated = j.TimeCreated
             };
-            //add the completed job to the database and remove the task from the tasks list, save changes.
-            _context.CompletedJobs.Add(c);
-
-            _context.Tasks.Remove(j);
-            await _context.SaveChangesAsync();
+            _context.Remove(j);
+            _context.Add(nJ);
+            
+           await _context.SaveChangesAsync();
             
 
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Index),"Home");
         }
+  
 
         private bool JobExists(int id)
         {

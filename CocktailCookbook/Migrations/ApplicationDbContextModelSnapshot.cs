@@ -15,9 +15,32 @@ namespace CocktailCookbook.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.15")
+                .HasAnnotation("ProductVersion", "3.1.18")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+            modelBuilder.Entity("CocktailCookbook.Models.Authorisation", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<bool>("IsAuthorised")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("RoleId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("Authorisation");
+                });
 
             modelBuilder.Entity("CocktailCookbook.Models.Cocktail", b =>
                 {
@@ -160,6 +183,21 @@ namespace CocktailCookbook.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Post");
+                });
+
+            modelBuilder.Entity("CocktailCookbook.Models.Role", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("RoleName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Role");
                 });
 
             modelBuilder.Entity("CocktailCookbook.Models.User", b =>
@@ -382,10 +420,22 @@ namespace CocktailCookbook.Migrations
                 {
                     b.HasBaseType("CocktailCookbook.Models.Job");
 
+                    b.Property<string>("MarkedCompleteByUserId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<DateTime>("TimeCompleted")
                         .HasColumnType("datetime2");
 
+                    b.HasIndex("MarkedCompleteByUserId");
+
                     b.HasDiscriminator().HasValue("CompletedJob");
+                });
+
+            modelBuilder.Entity("CocktailCookbook.Models.Authorisation", b =>
+                {
+                    b.HasOne("CocktailCookbook.Models.Role", null)
+                        .WithMany("Authorisations")
+                        .HasForeignKey("RoleId");
                 });
 
             modelBuilder.Entity("CocktailCookbook.Models.Cocktail", b =>
@@ -460,6 +510,13 @@ namespace CocktailCookbook.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("CocktailCookbook.Models.CompletedJob", b =>
+                {
+                    b.HasOne("CocktailCookbook.Models.User", "MarkedCompleteBy")
+                        .WithMany()
+                        .HasForeignKey("MarkedCompleteByUserId");
                 });
 #pragma warning restore 612, 618
         }

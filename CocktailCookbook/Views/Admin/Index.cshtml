@@ -1,0 +1,50 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@model IEnumerable<Role>
+
+
+
+<div class="text-center">
+    <h1 class="display-4">Role Assignment and Administration</h1>
+    <p>Assign roles and access privileges</p>
+</div>
+<table>
+    <thead>
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.RoleName)</th>
+            <th>Authorisation</th>
+        </tr>
+    </thead>
+
+    @foreach (var role in Model)
+    {
+
+        <tr>
+            <td>@Html.DisplayFor(modelItem => role.RoleName)</td>
+
+            @foreach (var a in role.Authorisations)
+            {
+                <td>@Html.DisplayFor(modelItem => a.Name)</td>
+            }
+
+        </tr>
+
+    }
+</table>
+
+
+<nav>
+    <div class="nav nav-tabs" id="nav-tab" role="tablist">
+        <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Authorisations</button>
+        <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Create New Role</button>
+     
+    </div>
+</nav>
+<div class="tab-content" id="nav-tabContent">
+    <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab"><p>This is a list of current Authorisations.</p><partial name="_AuthorisationsPartial" /> </div>
+    <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab"><partial name="_CreateRolePartial" /></div>
+
+</div>
+
+

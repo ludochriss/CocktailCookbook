@@ -11,5 +11,6 @@ namespace CocktailCookbook.ViewModels
 
         [Required]
         public string RoleName { get; set; }
+        
     }
 }

@@ -10,14 +10,14 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CocktailCookbook.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210812125451_newJob")]
-    partial class newJob
+    [Migration("20210831054255_initial")]
+    partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.15")
+                .HasAnnotation("ProductVersion", "3.1.18")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -118,6 +118,10 @@ namespace CocktailCookbook.Migrations
                     b.Property<string>("CreatorUserId")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
@@ -132,6 +136,8 @@ namespace CocktailCookbook.Migrations
                     b.HasIndex("CreatorUserId");
 
                     b.ToTable("Tasks");
+
+                    b.HasDiscriminator<string>("Discriminator").HasValue("Job");
                 });
 
             modelBuilder.Entity("CocktailCookbook.Models.Post", b =>
@@ -374,6 +380,21 @@ namespace CocktailCookbook.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
+            modelBuilder.Entity("CocktailCookbook.Models.CompletedJob", b =>
+                {
+                    b.HasBaseType("CocktailCookbook.Models.Job");
+
+                    b.Property<string>("MarkedCompleteByUserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("TimeCompleted")
+                        .HasColumnType("datetime2");
+
+                    b.HasIndex("MarkedCompleteByUserId");
+
+                    b.HasDiscriminator().HasValue("CompletedJob");
+                });
+
             modelBuilder.Entity("CocktailCookbook.Models.Cocktail", b =>
                 {
                     b.HasOne("CocktailCookbook.Models.User", "Creator")
@@ -446,6 +467,13 @@ namespace CocktailCookbook.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("CocktailCookbook.Models.CompletedJob", b =>
+                {
+                    b.HasOne("CocktailCookbook.Models.User", "MarkedCompleteBy")
+                        .WithMany()
+                        .HasForeignKey("MarkedCompleteByUserId");
                 });
 #pragma warning restore 612, 618
         }
