@@ -31,14 +31,17 @@ namespace CocktailCookbook
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-                .AddEntityFrameworkStores<ApplicationDbContext>().AddSignInManager();
+                .AddRoles<IdentityRole>()
+                
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+                
+                .AddSignInManager();
+                
 
             
             //Adds functionality for the roles of the identity users.
-          
+           
             //usermanager class accepts a generic parameter
-
-            
             services.AddControllersWithViews();
             services.AddRazorPages()
                 .AddRazorRuntimeCompilation();

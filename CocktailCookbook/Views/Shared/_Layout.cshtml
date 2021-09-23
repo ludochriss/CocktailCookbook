@@ -8,17 +8,68 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
+
+    <link href="~/lib/bootstrap/dist/css/cookbookStyles.css" rel="stylesheet" />
+
 </head>
 <body>
-    <header>
 
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">CocktailCookbook</a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
+
+    <div class="container-fluid" id="wrapper">
+        @*this is the sidebar*@
+       @*TODO: change local storage to remember that the nav bar is open*@
+        
+        <div class="container-fluid" id="sidebar">
+            
+                <a class="" asp-area="" asp-controller="Home" asp-action="Index"><h3>Cocktail Cookbook</h3></a>
+           
+            @*Nav Options*@
+                <ul class="list-unstyled">
+                    <li>
+                        <a class="list-group-item list-group-item-action list-group-item-light p-2" asp-controller="Home" asp-action="Index">Home</a>
+                    </li>
+                    <li>
+                        <a class="list-group-item list-group-item-action list-group-item-light p-2" asp-controller="Posts" asp-action="Index">Posts</a>
+                    </li>
+                    <li>
+                        <a class="list-group-item list-group-item-action list-group-item-light p-2 dropdown-toggle" data-toggle="collapse" aria-expanded="false" href="#cocktailSubmenu" >Cocktails</a>
+                        <ul class="collapse list-unstyled" data-toggle="collapse" aria-expanded="false" id="cocktailSubmenu" >
+                            <li>
+                                <a  class="list-group-item list-group-item-action list-group-item-light p-2" asp-area="" asp-controller="Cocktails" asp-action="Create">Create New Cocktail</a>
+                            </li>
+                           
+                            <li>
+                                <a  class="list-group-item list-group-item-action list-group-item-light p-2" asp-area="" asp-controller="Cocktails" asp-action="Index">Index</a>
+                            </li>
+                    
+                        </ul>
+
+                    </li>
+                    @{ if (sim.IsSignedIn(User))
+                        {
+                            <li>
+                                <a class="list-group-item list-group-item-action list-group-item-light p-2" asp-area="" asp-controller="Jobs" asp-action="Index">Jobs</a>
+
+                            </li>
+                            <li>
+                                <a class="list-group-item list-group-item-action list-group-item-light p-2" asp-controller="Admin" asp-action="Index">Admin</a>
+                            </li>
+                        }
+                    }
+                </ul>
+        </div>
+
+        @*This is the main page*@
+        <div class="container-fluid" id="content">
+
+            
+            <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+               
+                <button type="button" id="navToggle" class="btn btn-info">
+                    <i class="fas fa-align-left"></i>
+                    <span id="toggleText">&#9776;</span>
                 </button>
+
                 <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
                     <partial name="_LoginPartial" />
                     <ul class="navbar-nav flex-grow-1">
@@ -34,39 +85,55 @@
                                     <a class="nav-link text-dark" asp-area="" asp-controller="Posts" asp-action="Index">Posts</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Cocktails" asp-action="Index">Cocktails -DNW-</a>
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Cocktails" asp-action="Index">Cocktails</a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link text-dark" asp-area="" asp-controller="Jobs" asp-action="Index">Jobs</a>
                                 </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-controller="Admin" asp-action="Index">Admin</a>
+                                </li>
                             }
 
-
-
                         }
-
-
-
-
                     </ul>
                 </div>
-            </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
+
+            </nav>
+
+            
+            <main role="main" class="container-fluid pb-3">
+                @RenderBody()
+
+
+            </main>
+            <footer class="border-top footer text-muted ">
+                <div class="container">
+                    &copy; 2021 - CocktailCookbook - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                </div>
+            </footer>
+        </div>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2021 - CocktailCookbook - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
-    </footer>
+
+
+
+
+    <script>
+        function openNav() {
+            document.getElementById("sidebar").style.left = "200px";
+        }
+
+        function closeNav() {
+            document.getElementById("sidebar").style.left =-150;
+        }
+    </script>
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
+ <script src="~/js/layout.js"></script>
+    
+ 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
     @RenderSection("Scripts", required: false)
 </body>

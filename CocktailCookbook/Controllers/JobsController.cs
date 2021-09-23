@@ -27,10 +27,13 @@ namespace CocktailCookbook.Controllers
         // GET: Jobs
         public async Task<IActionResult> Index()
         {
-           ViewBag.CompleteJobs =await _context.Tasks.OfType<CompletedJob>().ToListAsync();
+
+          
+          
+            ViewBag.CompleteJobs =await _context.Tasks.OfType<CompletedJob>().ToListAsync();
 
          
-            return View(await _context.Tasks.ToListAsync());
+            return View(await _context.Tasks.Include(t=>t.Creator).ToListAsync());
         }
 
         // GET: Jobs/Details/5
@@ -64,8 +67,20 @@ namespace CocktailCookbook.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name,TaskDescription")] Job job)
         {
-            job.TimeCreated = DateTime.Now;
 
+            //Refactor required to database schema at this point will need to add an interface to manage user information as 
+            //neglected to manage the user using the in-built user management services
+
+            var user = await _um.GetUserAsync(User);
+           
+
+            job.TimeCreated = DateTime.Now;
+            if (_sm.IsSignedIn(User))
+            {
+                
+                job.Creator =await  _context.Staff.FirstOrDefaultAsync(u => u.UserId == user.Id);
+               
+            }
             if (ModelState.IsValid)
             {
                 _context.Add(job);

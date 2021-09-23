@@ -1,0 +1,19 @@
+﻿@model IEnumerable<CocktailCookbook.ViewModels.CreateRoleViewModel>
+
+
+<p>List of current Roles</p>
+<table class="table table-success table-striped">
+    <thead class="active">
+        <tr><th>Role Name</th></tr>
+    </thead>
+
+    <tbody>
+        @foreach (var r in Model)
+        {
+            <tr>
+                <td>@r.Name</td>
+            </tr>
+        }
+    </tbody>
+
+</table>

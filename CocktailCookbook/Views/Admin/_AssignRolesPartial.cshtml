@@ -1,0 +1,119 @@
+﻿@model IEnumerable<CocktailCookbook.ViewModels.UsersRolesViewModel>
+
+
+
+<div id="selectFunction">
+    <p>Would you like to <button class="btn btn-outline-warning" id="assign">Assign</button> or <button id="remove" class="btn btn-outline-danger">Remove</button> roles</p>
+</div>
+@*role assignment*@
+<div id="assignmentContainer" class="roleAssign">
+    
+    <h4>Select the user to assign a role</h4>
+
+    @*after clicking the button the user is prompted to remove roles for selected user.*@
+    <div class="overflow-scroll">
+
+        @{ foreach (var user in Model)
+            {
+                <div>
+                    <span id="@user.UserId" class="userSpan" onclick="Transmit('@user.Name.ToString()', '@user.UserId.ToString()' ,'assign')">
+                        @user.Name is in the role of @user.AssignedRoles
+                    </span>
+                </div>
+            }}
+    </div>
+    @*button becomes usable when selection is made*@
+    <button class="btn btn-warning disabled" id="openRoles" name="assign">Assign Roles</button>
+  
+
+    @*checkboxes are displayed*@
+    <div class="roleAssign" id="userRoleAssignContainer" name="">
+
+            <form asp-action="AssignRoles" asp-controller="Admin">
+
+                <div class="form-group">
+
+                    @*list of checkboxes with available roles to assign*@
+                    <div>
+                        @{ foreach (var role in ViewBag.ExistingRoles)
+                            {
+                                <div class="flex-column">
+                                    <label>@role.Name</label>
+                                    <input class="chkBoxAssign" type="checkbox" name="" value="@role.Name" />
+                                </div>
+                            }}
+                        @*needs the model.Name*@
+                        <input id="user" name="Name" hidden value="" />
+                        @*needs the model.Id*@
+                        <input id="userId" hidden name="UserId" value=""/>
+                        <input id="userRoles" hidden name="AssignedRoles" />
+                    </div>                                      @*passes the name to the role selection*@
+                    <button class="btn btn-warning" type="button" id="roleSelection" onclick="RoleSelection(document.getElementById('user').value,'assign')">Confirm Selection</button>
+                    <input type="submit" value="Assign Roles" class="btn btn-warning disabled" id="confirmRoles" />
+
+                </div>
+            </form>
+    </div>
+</div>
+@*Role removal*@
+
+<div id="removalContainer" class="roleAssign">
+    <h4>Select the User</h4>
+    <div class="overflow-scroll">
+
+        @{ foreach (var user in Model)
+            {
+                <div>
+                    <span id="@user.Name" class="userSpan" onclick="Transmit('@user.Name.ToString()', '@user.UserId.ToString()' ,'remove')" name="remove">
+                        @user.Name is in the role of @user.AssignedRoles
+                    </span>
+                </div>
+            }}
+            </div>
+    <button class="btn btn-warning disabled" id="openRoleRemoval" name="remove">Remove Roles</button>
+
+    <div class="roleAssign" id="userRoleRemovalContainer">
+            <form asp-action="RemoveRoles" asp-controller="Admin">
+                <div class="form-group">                   
+                    <div>
+                        @{ foreach (var role in ViewBag.ExistingRoles)
+                            {
+                                <div class="flex-column">
+                                    <label>@role</label>
+                                    <input  class="chkBoxRemove" type="checkbox" name="" value="@role" />
+                                </div>
+                            }}
+                        <input id="userRemove"  name="Name" hidden value=""/>
+
+                        <input id="userIdRemove" hidden name="UserId"  value=""/>
+                        <input id="userRolesRemove" hidden name="AssignedRoles" value=""/>
+                    </div>
+                    <button class="btn btn-warning" 
+                            type="button"
+                            id="roleSelectionRemoval" 
+                            onclick="RoleSelection(document.getElementById('userRemove').value,'remove')">
+
+                    Confirm Selection
+                    </button>
+                    <input type="submit" value="Remove Roles"  class="btn btn-warning disabled" id="confirmRolesRemoval" />
+
+                </div>
+            </form>
+
+        
+
+    </div>
+
+</div>
+
+@*@foreach (var r in Model)
+    {
+        <form asp-action="RemoveRoles">
+            <label>@r.Name</label>
+            <input hidden value="@r.Name" />
+            <label>@r.AssignedRoles</label>
+            <input hidden asp-for="@r.Name" />
+        </form>
+
+
+    }*@

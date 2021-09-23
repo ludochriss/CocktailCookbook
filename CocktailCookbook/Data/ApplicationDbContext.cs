@@ -37,8 +37,8 @@ namespace CocktailCookbook.Data
             //attempting to model the jobs inheritance tree
         }
 
-        public DbSet<CocktailCookbook.Models.Authorisation> Authorisation { get; set; }
+        
 
-        public DbSet<CocktailCookbook.Models.Role> Role { get; set; }
+       
     }
 }

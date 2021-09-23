@@ -1,4 +1,4 @@
-﻿@model CocktailCookbook.Models.Cocktail
+﻿@model CocktailCookbook.ViewModels.CreateCocktailViewModel
 
 @{
     ViewData["Title"] = "Create";
@@ -11,7 +11,7 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create">
+        <form asp-action="Create" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
@@ -20,7 +20,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="Method" class="control-label"></label>
-                <input asp-for="Method" class="form-control" />
+                <textarea asp-for="Method" class="form-control" placeholder="Type the method here"></textarea>
                 <span asp-validation-for="Method" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -34,20 +34,42 @@
                 <span asp-validation-for="Garnish" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label asp-for="Ingredients" class="control-label"></label>
+                <textarea asp-for="Ingredients" class="form-control"></textarea>
+                <span asp-validation-for="Ingredients" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Description" class="control-label"></label>
+                <textarea asp-for="Description" class="form-control"></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Photo" class="control-label"></label>
+                <div class="custom-file">
+                    <input asp-for="Photo" class="custom-file-input" id="customFile">
+                    <label class="custom-file-label" for="customFile">Choose file</label>
+                    <span asp-validation-for="Photo" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
         </form>
     </div>
+    <div>
+        <a asp-action="Index">Back to List</a>
+    </div>
+
+    <partial name="_IngredientPartial" />
+
 </div>
 
-<partial name="_IngredientPartial" />
-   
-@*@await Html.PartialAsync("_IngredientPartial",)*@ 
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    }

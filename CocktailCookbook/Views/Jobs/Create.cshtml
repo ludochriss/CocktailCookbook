@@ -10,7 +10,7 @@
 <h4>Job</h4>
 <hr />
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-6 align-content-center">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
@@ -20,8 +20,8 @@
             </div>
           
             <div class="form-group">
-                <label asp-for="TaskDescription" class="control-label"></label>
-                <input asp-for="TaskDescription" class="form-control" />
+                <label  class="control-label">Describe the task that needs doing</label>
+                <textarea asp-for="TaskDescription" class="form-control" rows="4" placeholder="Task Description"></textarea>
                 <span asp-validation-for="TaskDescription" class="text-danger"></span>
             </div>
             <div class="form-group">

@@ -19,29 +19,6 @@ namespace CocktailCookbook.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("CocktailCookbook.Models.Authorisation", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<bool>("IsAuthorised")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("RoleId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("RoleId");
-
-                    b.ToTable("Authorisation");
-                });
-
             modelBuilder.Entity("CocktailCookbook.Models.Cocktail", b =>
                 {
                     b.Property<int>("Id")
@@ -52,16 +29,25 @@ namespace CocktailCookbook.Migrations
                     b.Property<string>("CreatorUserId")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Garnish")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Glassware")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Ingredients")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Method")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Photo")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -168,8 +154,8 @@ namespace CocktailCookbook.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Author")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<string>("AuthorUserId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Content")
                         .HasColumnType("nvarchar(max)");
@@ -182,22 +168,9 @@ namespace CocktailCookbook.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("AuthorUserId");
+
                     b.ToTable("Post");
-                });
-
-            modelBuilder.Entity("CocktailCookbook.Models.Role", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("RoleName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Role");
                 });
 
             modelBuilder.Entity("CocktailCookbook.Models.User", b =>
@@ -431,13 +404,6 @@ namespace CocktailCookbook.Migrations
                     b.HasDiscriminator().HasValue("CompletedJob");
                 });
 
-            modelBuilder.Entity("CocktailCookbook.Models.Authorisation", b =>
-                {
-                    b.HasOne("CocktailCookbook.Models.Role", null)
-                        .WithMany("Authorisations")
-                        .HasForeignKey("RoleId");
-                });
-
             modelBuilder.Entity("CocktailCookbook.Models.Cocktail", b =>
                 {
                     b.HasOne("CocktailCookbook.Models.User", "Creator")
@@ -459,6 +425,13 @@ namespace CocktailCookbook.Migrations
                     b.HasOne("CocktailCookbook.Models.User", "Creator")
                         .WithMany()
                         .HasForeignKey("CreatorUserId");
+                });
+
+            modelBuilder.Entity("CocktailCookbook.Models.Post", b =>
+                {
+                    b.HasOne("CocktailCookbook.Models.User", "Author")
+                        .WithMany()
+                        .HasForeignKey("AuthorUserId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

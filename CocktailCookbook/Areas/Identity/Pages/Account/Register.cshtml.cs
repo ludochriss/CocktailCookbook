@@ -81,8 +81,8 @@ namespace CocktailCookbook.Areas.Identity.Pages.Account
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
-            //TODO: Add role of user and role of admin if necessary
-
+           
+            //Have added role assignment in administation controller. Roles can be created and assigned to 
             returnUrl = returnUrl ?? Url.Content("~/");
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
@@ -92,7 +92,7 @@ namespace CocktailCookbook.Areas.Identity.Pages.Account
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded)
                 {
-
+                    //TODO: need to add and collect personal information after all
                     //adds a user to the staff database
                     var s = new Models.User
                     {
@@ -103,16 +103,7 @@ namespace CocktailCookbook.Areas.Identity.Pages.Account
                     };
 
 
-                    //TODO: create an admin class that can handle role assignment and creation
-                    //bool exists = await _roleManager.RoleExistsAsync("User");
-                    //if (exists == false)
-                    //{
-                    //    IdentityRole idRole = new IdentityRole
-                    //    {
-                    //        Name = "User"
-                    //    };
-                    //   await  _context.Roles.AddAsync(idRole);
-                    //}
+            
 
            
                       _context.Staff.Add(s);

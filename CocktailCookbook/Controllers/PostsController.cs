@@ -14,9 +14,10 @@ using Microsoft.AspNetCore.Authorization;
 namespace CocktailCookbook.Controllers
 {
 
-    //TODO: allow admin roles to delete comments and/or threads
+    
 
    //[Authorize(Policy ="UserOnly")]
+   //[Authorize(Roles ="Bar")]
     public class PostsController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -38,7 +39,8 @@ namespace CocktailCookbook.Controllers
         public async Task<IActionResult> Index()
         {
             //incase of bypassing with url, validates that 
-            
+            //TODO:remove edit and details button from view
+            //TODO:remove delete post funtionality for all but admin
             if (_sm.IsSignedIn(User))
             {
                 var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -46,7 +48,7 @@ namespace CocktailCookbook.Controllers
 
                 ViewBag.isAuthor = await _context.Staff.FirstOrDefaultAsync(s => s.UserId == userId);
 
-                return View(await _context.Post.ToListAsync());
+                return View(await _context.Post.Include(p=>p.Author).ToListAsync());
 
             }
             else
@@ -94,9 +96,10 @@ namespace CocktailCookbook.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title,Content,Author")] Post post)
+        public async Task<IActionResult> Create([Bind("Id,Title,Content")] Post post)
         {
-           
+            var currentUser = await _um.GetUserAsync(User);
+            post.Author = await _context.Staff.FirstOrDefaultAsync(u => u.UserId == currentUser.Id);
             post.TimeCreated = DateTime.Now;
             if (ModelState.IsValid)
             {
@@ -105,6 +108,22 @@ namespace CocktailCookbook.Controllers
                 return RedirectToAction(nameof(Index));
             }
             return View(post);
+        }
+
+        //takes a user ID and checks against current user to see if their Id Matches, returns bool
+        public async Task<bool> IsCurrentUser(string id)
+        {
+            var currentUser = await _um.GetUserAsync(User);
+            if (id == currentUser.Id)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+            
+
         }
 
         // GET: Posts/Edit/5
@@ -246,17 +265,23 @@ namespace CocktailCookbook.Controllers
         [HttpGet]
         public async Task<IActionResult> ViewThread(int? id)
         {
+            var p = await _context.Post.Where(p => p.Id == id)
+                .Select(p=>p)
+                .Include(p=>p.Author)
+                .Include(p=>p.Comments)
+                 .FirstOrDefaultAsync();
 
-            var post = await _context.Post.FirstOrDefaultAsync(p => p.Id == id);
-
-            ViewBag.OriginalAuthor = post.Author;
+            //checks the current user against the post's author and will allow edit or delete functionality within the view
+         
+            
+            ViewBag.OriginalAuthor = await IsCurrentUser(p.Author.UserId);
 
             var comments = await _context.Comment.
                 Where(c=>c.PostId ==id)
                  .ToListAsync();
-            post.Comments = comments;
+            //p.Comments = comments;
 
-            return View(post);
+            return View(p);
         }
         private bool PostExists(int id)
         {

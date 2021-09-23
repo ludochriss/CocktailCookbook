@@ -8,6 +8,10 @@ using Microsoft.EntityFrameworkCore;
 using CocktailCookbook.Data;
 using CocktailCookbook.Models;
 using Microsoft.AspNetCore.Authorization;
+using Newtonsoft.Json;
+using System.IO;
+using Microsoft.AspNetCore.Hosting;
+using CocktailCookbook.ViewModels;
 
 namespace CocktailCookbook.Controllers
 {
@@ -16,14 +20,20 @@ namespace CocktailCookbook.Controllers
     {
         private readonly ApplicationDbContext _context;
 
-        public CocktailsController(ApplicationDbContext context)
+        //web host evnironment seems to be a file path helper for the .Net runtime
+        private readonly IWebHostEnvironment _webHostEnvironment;
+        public CocktailsController(ApplicationDbContext context, IWebHostEnvironment webHostEnvironment)
         {
             _context = context;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         // GET: Cocktails
         public async Task<IActionResult> Index()
         {
+            //TODO: add buttons to cocktail cards on home screen
+            //TODO: change the default tabs on the 
+           
             return View(await _context.Cocktail.ToListAsync());
         }
 
@@ -60,11 +70,24 @@ namespace CocktailCookbook.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Method,Glassware,Garnish")] Cocktail cocktail,CocktailIngredient ci)
+        public async Task<IActionResult> Create([Bind("Id,Name,Method,Glassware,Garnish,Description,Ingredients,Photo")] CreateCocktailViewModel cocktail)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(cocktail);
+                string uniqueFileName = UploadedFile(cocktail);
+                var newCocktail = new Cocktail
+                {
+                    Id = cocktail.Id,
+                    Ingredients = cocktail.Ingredients,
+                    Method = cocktail.Method,
+                    Glassware = cocktail.Glassware,
+                    Garnish = cocktail.Garnish,
+                    Creator = cocktail.Creator,
+                    Description = cocktail.Description,
+                    Name = cocktail.Name,
+                    Photo = uniqueFileName
+                 };             
+                _context.Add(newCocktail);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
@@ -92,7 +115,7 @@ namespace CocktailCookbook.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Method,Glassware,Garnish")] Cocktail cocktail)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Method,Glassware,Garnish,Description,Ingredients,Photo")] Cocktail cocktail)
         {
             if (id != cocktail.Id)
             {
@@ -160,5 +183,37 @@ namespace CocktailCookbook.Controllers
         {
             return _context.Cocktail.Any(e => e.Id == id);
         }
+        private string UploadedFile(CreateCocktailViewModel model)
+        {
+            string uniqueFileName = null;
+
+            if (model.Photo != null)
+            {
+                string uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "images");
+                uniqueFileName = Guid.NewGuid().ToString() + "_" + model.Photo.FileName;
+                string filePath = Path.Combine(uploadsFolder, uniqueFileName);
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    model.Photo.CopyTo(fileStream);
+                }
+            }
+            return uniqueFileName;
+        }
+        //public string SaveFile(FileUpload fileObj)
+        //{
+        //    Cocktail cocktail = JsonConvert.DeserializeObject<Cocktail>(fileObj.Cocktail);
+        //    if (fileObj.File.Length > 0)
+        //    {
+        //        using (var ms = new MemoryStream())
+        //        {
+
+        //            fileObj.File.CopyTo(ms);
+        //            var fileBytes = ms.ToArray();
+        //            cocktail.Photo = fileBytes;
+
+        //        }
+        //    }
+        //    return "";
+        //}
     }
 }

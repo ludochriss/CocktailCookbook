@@ -25,34 +25,36 @@ namespace CocktailCookbook.Controllers
 
         public async Task<IActionResult> Index()
         {
-        
-
-            //#TODO: make a view model that has a list of everything
-            //#TODO: combine all users based on role and items in the database based on role so that they have a linking table which allows includ functionality
+            //TODO: remove the ADD role button and develop an administration page that has all of the functions for role assignment and removal.
+            //TODO: add the ability to store images for the cocktail cards.
 
             var c = await _context.Cocktail.ToListAsync();
-            var jobs = await _context.Tasks.ToListAsync();
+            var jobs = await _context.Tasks.Include(j=>j.Creator).ToListAsync();
+            //TODO: retrieve job/completed job information in single database call 
             List<Job> currentJobs = new List<Job>();
             List<CompletedJob> completedJobs = new List<CompletedJob>();
-            //Object relational mapping in EFCore is not supporterd for inherited types, perhaps this would be easier elsewhere but for now I remove after querying the data base
-            //organised by table per heirarchy and requires sort for completed vs non completed
-            //will need to create viewmodel with list of cocktails, completed and incomplete jobs
-            List<Cocktail> cocktails = new List<Cocktail>();
-            foreach (var j in jobs)
+            if (jobs.Count() > 0)
             {
+                //Object relational mapping in EFCore is not supporterd for inherited types, 
 
-                if (j.GetType() != typeof(CompletedJob))
+                List<Cocktail> cocktails = new List<Cocktail>();
+                foreach (var j in jobs)
                 {
-                    currentJobs.Add(j);
+
+                    if (j.GetType() != typeof(CompletedJob))
+                    {
+                        currentJobs.Add(j);
+                    }
+                    else
+                    {
+                        completedJobs.Add((CompletedJob)j);
+                    }
                 }
-                else
-                {
-                    completedJobs.Add((CompletedJob)j);
-                }
+
             }
+         
+           
 
-            //var home = from c in _context.Tasks
-            //           join  j in _context.Cocktails
             ViewBag.CompletedJobs = completedJobs as IEnumerable<CompletedJob>;
             ViewBag.Cocktails = c as IEnumerable<Cocktail>;
 

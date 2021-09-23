@@ -3,13 +3,13 @@
 @{
     ViewData["Title"] = "Index";
 }
+<header class="popover-header"><h2 class="font-weight-light">Posts</h2></header>
 
-<h1>Index</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a class="btn-dark btn" asp-action="Create">New Thread</a>
 </p>
-<table class="table">
+<table class="table  p-3 m-4" >
     <thead>
         <tr>
             <th>
@@ -47,10 +47,10 @@
                 <a asp-action="ViewThread" asp-route-id="@item.Id">Comments</a>
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Author)
+                @Html.DisplayFor(modelItem => item.Author.NickName)
             </td>
             <td>
-                @if (ViewBag.isAuthor.NickName == item.Author)
+                @if (true)
                 {
                     <a asp-action="Delete" asp-route-id="@item.Id">Delete   |</a> 
                     

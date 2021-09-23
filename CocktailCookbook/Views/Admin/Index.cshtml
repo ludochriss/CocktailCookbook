@@ -1,50 +1,48 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@model IEnumerable<Role>
+﻿@model IEnumerable<CocktailCookbook.ViewModels.UsersRolesViewModel>
 
+<h1>Admin</h1>
 
-
-<div class="text-center">
-    <h1 class="display-4">Role Assignment and Administration</h1>
-    <p>Assign roles and access privileges</p>
-</div>
-<table>
-    <thead>
-        <tr>
-            <th>@Html.DisplayNameFor(model => model.RoleName)</th>
-            <th>Authorisation</th>
-        </tr>
-    </thead>
-
-    @foreach (var role in Model)
-    {
-
-        <tr>
-            <td>@Html.DisplayFor(modelItem => role.RoleName)</td>
-
-            @foreach (var a in role.Authorisations)
-            {
-                <td>@Html.DisplayFor(modelItem => a.Name)</td>
-            }
-
-        </tr>
-
-    }
-</table>
-
+<a asp-action="CreateRole">Create New Role</a>
 
 <nav>
     <div class="nav nav-tabs" id="nav-tab" role="tablist">
-        <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Authorisations</button>
-        <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Create New Role</button>
-     
+        <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Roles</button>
+
+        <button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#nav-contact" type="button" role="tab" aria-controls="nav-contact" aria-selected="false">Assign/Remove Role</button>
     </div>
 </nav>
-<div class="tab-content" id="nav-tabContent">
-    <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab"><p>This is a list of current Authorisations.</p><partial name="_AuthorisationsPartial" /> </div>
-    <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab"><partial name="_CreateRolePartial" /></div>
 
+<div class="tab-content" id="nav-tabContent">
+    
+    <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+        <h4>Current Roles</h4>
+        <table class="table table-striped">
+
+            <thead>
+                <tr>
+                    <th>User Name/ Email</th>
+                    <th>Roles</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var r in Model)
+                {
+                    <tr>
+                        <td>@r.Name</td>
+                        <td>@r.AssignedRoles</td>
+                    </tr>
+                }
+            </tbody>
+
+        </table>
+    </div>
+
+    <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">
+        <partial name="_AssignRolesPartial" model="Model" />
+    </div>
 </div>
+
+
 
 
