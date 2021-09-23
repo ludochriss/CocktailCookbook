@@ -66,6 +66,10 @@ namespace CocktailCookbook
             }
             else
             {
+                //temporarily used this for helping with  online debugging
+                app.UseDeveloperExceptionPage();
+                app.UseDatabaseErrorPage();
+
                 app.UseExceptionHandler("/Home/Error");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
