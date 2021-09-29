@@ -5,7 +5,7 @@ env_variables:
  DB_USER: "app-engine"
  DB_NAME: "cookbook-db-v2"
  DB_PASS: "cookbook"
- DB_HOST: "34.116.96.157"
+ DB_HOST: ""
 
 beta_settings:
  cloud_sql_instances: "eloquent-surge-324405:australia-southeast1:cookbook-db=tcp:4001"

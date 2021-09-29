@@ -24,40 +24,65 @@
                 <a class="" asp-area="" asp-controller="Home" asp-action="Index"><h3>Cocktail Cookbook</h3></a>
            
             @*Nav Options*@
-                <ul class="list-unstyled">
+        <ul class="list-unstyled">
+            <li>
+                <a class="list-group-item list-group-item-action list-group-item-light p-2" asp-controller="Home" asp-action="Index">Home</a>
+            </li>
+            <li>
+                <a class="list-group-item list-group-item-action list-group-item-light p-2" asp-controller="Posts" asp-action="Index">Posts</a>
+            </li>
+            <li>
+                <a class="list-group-item list-group-item-action list-group-item-light p-2 dropdown-toggle" data-toggle="collapse" aria-expanded="false" href="#cocktailSubmenu">Cocktails</a>
+                <ul class="collapse list-unstyled" data-toggle="collapse" aria-expanded="false" id="cocktailSubmenu">
                     <li>
-                        <a class="list-group-item list-group-item-action list-group-item-light p-2" asp-controller="Home" asp-action="Index">Home</a>
+                        <a class="list-group-item list-group-item-action list-group-item-light p-2" asp-area="" asp-controller="Cocktails" asp-action="Create">Create New Cocktail</a>
                     </li>
+
                     <li>
-                        <a class="list-group-item list-group-item-action list-group-item-light p-2" asp-controller="Posts" asp-action="Index">Posts</a>
+                        <a class="list-group-item list-group-item-action list-group-item-light p-2" asp-area="" asp-controller="Cocktails" asp-action="Index">Index</a>
                     </li>
-                    <li>
-                        <a class="list-group-item list-group-item-action list-group-item-light p-2 dropdown-toggle" data-toggle="collapse" aria-expanded="false" href="#cocktailSubmenu" >Cocktails</a>
-                        <ul class="collapse list-unstyled" data-toggle="collapse" aria-expanded="false" id="cocktailSubmenu" >
-                            <li>
-                                <a  class="list-group-item list-group-item-action list-group-item-light p-2" asp-area="" asp-controller="Cocktails" asp-action="Create">Create New Cocktail</a>
-                            </li>
-                           
-                            <li>
-                                <a  class="list-group-item list-group-item-action list-group-item-light p-2" asp-area="" asp-controller="Cocktails" asp-action="Index">Index</a>
-                            </li>
+
                     
-                        </ul>
+                </ul>
+            <li class="">
+                <a class="list-group-item list-group-item-action list-group-item-light p-2" asp-area="Identity" asp-page="/Account/Register">Register</a>
+            </li>
+            <li class="">
+                <a class="list-group-item list-group-item-action list-group-item-light p-2" asp-area="Identity" asp-page="/Account/Login">Login</a>
+            </li>
+            </li>
+
+            @{ if (sim.IsSignedIn(User))
+                {
+                    <li>
+                        <a class="list-group-item list-group-item-action list-group-item-light p-2" asp-area="" asp-controller="Jobs" asp-action="Index">Jobs</a>
 
                     </li>
-                    @{ if (sim.IsSignedIn(User))
-                        {
-                            <li>
-                                <a class="list-group-item list-group-item-action list-group-item-light p-2" asp-area="" asp-controller="Jobs" asp-action="Index">Jobs</a>
-
-                            </li>
-                            <li>
-                                <a class="list-group-item list-group-item-action list-group-item-light p-2" asp-controller="Admin" asp-action="Index">Admin</a>
-                            </li>
-                        }
-                    }
-                </ul>
+                    <li>
+                        <a class="list-group-item list-group-item-action list-group-item-light p-2" asp-controller="Admin" asp-action="Index">Admin</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="list-group-item list-group-item-action list-group-item-light p-2" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @User.Identity.Name!</a>
+                    </li>
+                    <li class="nav-item">
+                        <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                            <button type="submit" class="nav-link btn btn-link text-dark">Logout</button>
+                        </form>
+                    </li>
+                }
+            }
+        </ul>
         </div>
+
+
+
+
+
+
+
+
+
+
 
         @*This is the main page*@
         <div class="container-fluid" id="content">
