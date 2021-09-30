@@ -53,5 +53,5 @@ jobs:
         with:
           app-name: 'cocktailcookbook'
           slot-name: 'test'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_8AADFB9C247649E19930B623581849C0 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_4AFCD20DA74741CC8A37930389E402F4 }}
           package: .
