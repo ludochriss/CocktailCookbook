@@ -5,9 +5,8 @@
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome to the Cocktail Cookbook</h1>
-    <p>Upload recipes, discuss ideas, propose changes and make the bar a better place...<br /> or at least not as bad.</p>
-</div>
+    <h1 class="display-4">Opera Bar Cookbook</h1>
+    </div>
 
 <nav>
     <div class="nav nav-tabs" id="nav-tab" role="tablist">
@@ -18,7 +17,7 @@
     </div>
 </nav>
 <div class="tab-content" id="nav-tabContent">
-    <div class="tab-pane fade show active" id="nav-cocktails" role="tabpanel" aria-labelledby="nav-cocktail-tab">This will contain cocktail, with ingredients, recipe and measures.<partial name="_CocktailCardPartial" model="ViewBag.Cocktails" /></div>
+    <div class="tab-pane fade show active" id="nav-cocktails" role="tabpanel" aria-labelledby="nav-cocktail-tab"><partial name="_CocktailCardPartial" model="ViewBag.Cocktails" /></div>
     <div class="tab-pane fade" id="nav-pending" role="tabpanel" aria-labelledby="nav-pending-tab"><p>This is a list of current tasks. If a task has been marked in error, it can be found on the Jobs page</p><partial name="_JobsPartial" model="Model" /> </div>
     <div class="tab-pane fade" id="nav-completed" role="tabpanel" aria-labelledby="nav-completed-tab">Completed Tasks can be found here<partial name="_CompletedJobsPartial" model="ViewBag.CompletedJobs" /></div>
 

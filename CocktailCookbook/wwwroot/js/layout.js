@@ -13,7 +13,7 @@ let toggleRole = document.getElementById('toggleRoles');
 
 //toggles the sidebar
 toggle.onclick = () => {
-
+    
     if (!sidebar.classList.contains('active')) {
         console.log('Doesnt contain active');
         content.style.marginLeft = '180px';
@@ -29,7 +29,7 @@ toggle.onclick = () => {
 
 //show/hide the role assignment and removal div's
 assign.onclick = () => {
-    
+   
     if (assignDiv.style.display == '') {
         assignDiv.style.display = 'none';
     }

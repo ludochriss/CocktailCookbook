@@ -53,7 +53,8 @@ namespace CocktailCookbook.Controllers
             }
             else
             {
-               return RedirectToAction(nameof(HomeController.Index));
+             
+             return View("NotLoggedIn");
             }
            
 

@@ -6,12 +6,16 @@ using System.Threading.Tasks;
 
 namespace CocktailCookbook.Models
 {
-   //to be implemented as Table per concrete class 
-    public class CompletedJob:Job
-    {
-        public DateTime TimeCompleted { get; set; }
 
-        public User MarkedCompleteBy { get; set; }
+    [NotMapped]
+    public class WorkDay
+    {
+        
+        public string DayOfWeek { get; set; }
+        public bool Morning { get; set; }
+
+        public bool Evening { get; set; }
+
 
     }
 }

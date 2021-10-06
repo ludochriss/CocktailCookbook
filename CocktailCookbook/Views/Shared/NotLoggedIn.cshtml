@@ -1,0 +1,20 @@
+﻿
+@{
+    ViewData["Title"] = "Not Signed In";
+}
+
+<h1 class="text-danger">Error.</h1>
+<h2 class="text-danger">Sign in to gain access to this page</h2>
+
+
+
+
+<p>
+    <strong><a asp-area="Identity" asp-page="/Account/Login">Signing In</a> or <a asp-area="Identity" asp-page="/Account/Register">Registering</a></strong> will enable access to some restricted areas of the cookbook.
+</p>
+<p>
+    <strong>Emails and passwords should not be matching pairs used for external login pairs.</strong>
+   When registering for an account, during development it is preferred to use a fake email e.g "fake@fake.com". The form validation on sign up is for the browser only and checks the format of the email. Two factor Authentication and email verification are both disabled.
+    For local debugging, enable the <strong>Development</strong> environment by setting the <strong>ASPNETCORE_ENVIRONMENT</strong> environment variable to <strong>Development</strong>
+    and restarting the app.
+</p>

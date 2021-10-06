@@ -224,8 +224,8 @@ namespace CocktailCookbook.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Title = table.Column<string>(nullable: true),
-                    Content = table.Column<string>(nullable: true),
+                    Title = table.Column<string>(nullable: false),
+                    Content = table.Column<string>(nullable: false),
                     TimeCreated = table.Column<DateTime>(nullable: false),
                     AuthorUserId = table.Column<string>(nullable: true)
                 },

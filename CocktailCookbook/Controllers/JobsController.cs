@@ -72,15 +72,13 @@ namespace CocktailCookbook.Controllers
             //neglected to manage the user using the in-built user management services
 
             var user = await _um.GetUserAsync(User);
-           
 
             job.TimeCreated = DateTime.Now;
             if (_sm.IsSignedIn(User))
             {
-                
-                job.Creator =await  _context.Staff.FirstOrDefaultAsync(u => u.UserId == user.Id);
-               
+                job.Creator = await _context.Staff.FirstOrDefaultAsync(u => u.UserId == user.Id);
             }
+        
             if (ModelState.IsValid)
             {
                 _context.Add(job);
@@ -141,7 +139,7 @@ namespace CocktailCookbook.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Index),"Home");
             }
             return View(job);
         }

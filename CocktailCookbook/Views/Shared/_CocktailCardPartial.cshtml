@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<CocktailCookbook.Models.Cocktail>
 
 <p>
-    <a asp-action="Create" asp-controller="Cocktails">Create New</a>
+    <a class="btn btn-success"asp-action="Create" asp-controller="Cocktails">Create New</a>
 </p>
 
 <body class="flex justify-content-around">
@@ -22,11 +22,11 @@
         </div>
 
 
-        <p>
+        <div class="container justify-content-around">
             
             <button class="btn btn-primary" id="@id" data-toggle="collapse" data-target="#@info" aria-expanded="false" aria-controls="@info">Info</button>
             <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#@action" aria-expanded="false" aria-controls="@action">Action</button>
-        </p>
+        </div>
         <div class="row m-0 p-0">
             <div class="row m-0 p-0">
                 <div class="collapse m-0 p-0" id="@info">

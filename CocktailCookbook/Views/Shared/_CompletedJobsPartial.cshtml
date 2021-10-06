@@ -36,8 +36,8 @@
             </td>
             <td>
                 
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="MarkedInError" asp-controller="Jobs" asp-route-id="@item.Id">Marked In Error</a> |
+                <a class="btn btn btn-info"asp-controller="Jobs" asp-action="Delete" asp-route-id="@item.Id">Delete</a> |
+                <a class="btn btn-warning" asp-action="MarkedInError" asp-controller="Jobs" asp-route-id="@item.Id">Marked In Error</a> 
 
                 @{ if (User.IsInRole("Manager"))
                         {
