@@ -13,11 +13,14 @@ namespace CocktailCookbook.Models
 
         [Display(Name = "comment by")]
 
-        public string Author { get; set; }
+        public User Author { get; set; }
         public DateTime Time { get; set; }
         [Required]
+
         public string Content { get; set; }
-        public int PostId { get; set; }
-        public List<Comment> Comments { get; set; }
+
+        public string Title { get; set; }
+        public Post OriginalPost { get; set; }
+       
     }
 }

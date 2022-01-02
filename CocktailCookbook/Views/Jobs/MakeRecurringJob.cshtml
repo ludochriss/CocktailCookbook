@@ -1,0 +1,63 @@
+﻿@model CocktailCookbook.ViewModels.MakeRecurringViewModel
+
+@{
+    ViewData["Title"] = "MakeRecurringJob";
+}
+
+<h1>Make Recurring Job</h1>
+@Model
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="MakeRecurringJob">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="TaskDescription" class="control-label"></label>
+                <input asp-for="TaskDescription" class="form-control" />
+                <span asp-validation-for="TaskDescription" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="RecursWeekly" />@Html.DisplayNameFor(model => model.RecursWeekly)
+                </label>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="RecursDaily" /> @Html.DisplayNameFor(model => model.RecursDaily)
+                </label>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="RecursHourly" /> @Html.DisplayNameFor(model => model.RecursHourly)
+                </label>
+            </div>
+            <div class="form-group">
+                <label asp-for="DailyTime" class="control-label"></label>
+                <input  asp-for="DailyTime"  asp-format="{0:HH:MM}" class="form-control" />
+
+                <span asp-validation-for="DailyTime" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <p>For daily and weekly, leave blank</p>
+
+                @Html.DropDownList("HourlyFrequency", (IEnumerable<SelectListItem>)ViewBag.HourList)
+
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+

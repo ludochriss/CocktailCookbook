@@ -1,4 +1,4 @@
-﻿@model IEnumerable<CocktailCookbook.Models.Job>
+﻿@model CocktailCookbook.ViewModels.JobsIndexViewModel
 
 @{
     ViewData["Title"] = "Index";
@@ -8,63 +8,45 @@
 <h1>Jobs</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a class="btn btn-success" asp-action="Create">Create New</a>
+    <a class="btn btn-warning" asp-action="TaskManagement">Task Management</a>
 </p>
 
 
 <ul class="nav nav-tabs" id="myTab" role="tablist">
     <li class="nav-item" role="presentation">
-        <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">Current Jobs</button>
+        <button class="nav-link active" id="pending-tab" data-bs-toggle="tab" data-bs-target="#pending" type="button" role="tab" aria-controls="pending" aria-selected="true">Pending Jobs</button>
     </li>
     <li class="nav-item" role="presentation">
-        <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">Completed Jobs</button>
+        <button class="nav-link" id="completed-tab" data-bs-toggle="tab" data-bs-target="#completed" type="button" role="tab" aria-controls="completed" aria-selected="false">Completed Jobs</button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="hourly-tab" data-bs-toggle="tab" data-bs-target="#hourly" type="button" role="tab" aria-controls="hourly" aria-selected="false">Hourly Jobs</button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="daily-tab" data-bs-toggle="tab" data-bs-target="#daily" type="button" role="tab" aria-controls="daily" aria-selected="false">Daily Jobs</button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="weekly-tab" data-bs-toggle="tab" data-bs-target="#weekly" type="button" role="tab" aria-controls="weekly" aria-selected="false">Weekly Jobs</button>
     </li>
 
 </ul>
-<div class="tab-content" id="myTabContent">
-    <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-        <partial name="_JobsPartial" model="Model" />
-    </div>
-    <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>
-                        @Html.DisplayNameFor(model => model.Name)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.TimeCreated)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.TaskDescription)
-                    </th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Model)
-                {
-                    <tr>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Name)
-                        </td>
-                        <td>
 
-                            @item.TimeCreated.ToShortDateString() @item.TimeCreated.ToShortTimeString()
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.TaskDescription)
-                        </td>
-                        <td>
-                            <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                            <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                            <a asp-action="MarkedInError" asp-route-id="@item.Id">Marked In Error</a> |
-                            <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
+<div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade show active" id="pending" role="tabpanel" aria-labelledby="pending-tab">
+        <partial name="~/Views/Shared/JobPartials/_JobsPartial.cshtml" model="Model.PendingJobs" />
+    </div>
+    <div class="tab-pane fade" id="completed" role="tabpanel" aria-labelledby="completed-tab">
+        <partial name="~/Views/Shared/JobPartials/_CompletedJobsPartial.cshtml" model="Model.CompletedJobs" />
+    </div>
+    <div class="tab-pane fade" id="hourly" role="tabpanel" aria-labelledby="hourly-tab">
+        <partial name="~/Views/Shared/JobPartials/_HourlyJobsPartial.cshtml" model="Model.HourlyJobs" />
+    </div>
+    <div class="tab-pane fade" id="daily" role="tabpanel" aria-labelledby="daily-tab">
+        <partial name="~/Views/Shared/JobPartials/_DailyJobsPartial.cshtml" model="Model.DailyJobs" />
+    </div>
+    <div class="tab-pane fade" id="weekly" role="tabpanel" aria-labelledby="weekly-tab">
+        <partial name="~/Views/Shared/JobPartials/_WeeklyJobsPartial.cshtml" model="Model.WeeklyJobs" />
     </div>
 
 </div>

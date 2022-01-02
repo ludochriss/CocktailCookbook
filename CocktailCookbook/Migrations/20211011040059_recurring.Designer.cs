@@ -4,14 +4,16 @@ using CocktailCookbook.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace CocktailCookbook.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211011040059_recurring")]
+    partial class recurring
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -140,8 +142,8 @@ namespace CocktailCookbook.Migrations
                     b.Property<string>("CreatorUserId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int?>("DepartmentId")
-                        .HasColumnType("int");
+                    b.Property<string>("Department")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Discriminator")
                         .IsRequired()
@@ -159,8 +161,6 @@ namespace CocktailCookbook.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CreatorUserId");
-
-                    b.HasIndex("DepartmentId");
 
                     b.ToTable("Tasks");
 
@@ -469,10 +469,6 @@ namespace CocktailCookbook.Migrations
                     b.HasOne("CocktailCookbook.Models.User", "Creator")
                         .WithMany()
                         .HasForeignKey("CreatorUserId");
-
-                    b.HasOne("CocktailCookbook.Models.Department", "Department")
-                        .WithMany()
-                        .HasForeignKey("DepartmentId");
                 });
 
             modelBuilder.Entity("CocktailCookbook.Models.Post", b =>

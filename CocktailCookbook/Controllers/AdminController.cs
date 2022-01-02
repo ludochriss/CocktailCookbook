@@ -14,7 +14,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CocktailCookbook.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Administrator")]
     public class AdminController : Controller
     {
         private readonly RoleManager<IdentityRole> roleManager;
@@ -30,15 +30,15 @@ namespace CocktailCookbook.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
+            //perhaps this is getting too chunky
+            // separates out roles 
             var rolesList = await _context.Roles.ToListAsync();
             var user = await userManager.GetUserAsync(User);
-            var inRole = await userManager.GetRolesAsync(user);
-            //var isInRole = await roleManager.AddClaimAsync(rolesList[1], new Claim("", ""));
-            var result = await userManager.IsInRoleAsync(user, "Bar");
-            //need to select all users and their associated tol
-            ViewBag.ExistingRoles = await roleManager.Roles.ToListAsync();
+            //var inRole = await userManager.GetRolesAsync(user);
+            
+           
             List<UsersRolesViewModel> list = new List<UsersRolesViewModel>();
-
+            //gets a list of users
             var x = await _context.Users.ToListAsync();
             foreach (var u in x)
             {
@@ -50,27 +50,20 @@ namespace CocktailCookbook.Controllers
                 });
                 
             }
-         
-            //gets a list of users and their associated roles
-            //var usersWithRoles = (from user in _context.Users
-            //                      select new
-            //                      {
-            //                          UserId = user.Id,
-            //                          Username = user.UserName,
-                                      
-            //                          RoleNames = (from userRole in _context.UserRoles
-            //                                       join role in _context.Roles on userRole.RoleId
-            //                                       equals role.Id
-            //                                       select role.Name).ToList()
-            //                      }).ToList().Select(p => new UsersRolesViewModel()
+            var vm = new AdminIndexViewModel();
+            var vmRoles = new List<string>();
+            foreach (var r in rolesList)
+            {
+                vmRoles.Add(r.Name);
+            }
+            var deptList = await _context.Departments.ToListAsync();
 
-            //                      {
-            //                          UserId = p.UserId,
-            //                          Name = p.Username,
-                                      
-            //                          AssignedRoles = string.Join(",", p.RoleNames)
-            //                      });
-            return View(list);
+            vm.Roles = vmRoles;
+            vm.UserRoles = list;
+            vm.Departments = deptList;
+
+            
+            return View(vm);
         }
 
         [HttpGet]
@@ -146,6 +139,28 @@ namespace CocktailCookbook.Controllers
             }
             
             
+        }
+        [HttpGet]
+        public IActionResult CreateDepartment()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateDepartment([Bind("Id,Name")] Department dept)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.Departments.Add(dept);
+                await _context.SaveChangesAsync();
+            }
+          
+            else
+            {
+                return RedirectToAction(nameof(CreateDepartment));
+            }
+
+            return RedirectToAction(nameof(Index), "Admin");
         }
 
 

@@ -4,6 +4,8 @@ using System.Text;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using CocktailCookbook.Models;
+using Microsoft.AspNetCore.Identity;
+using CocktailCookbook.ViewModels;
 
 namespace CocktailCookbook.Data
 {
@@ -23,8 +25,10 @@ namespace CocktailCookbook.Data
         public DbSet<CocktailCookbook.Models.CocktailIngredient> CocktailIngredient { get; set; }
         public DbSet<CocktailCookbook.Models.Ingredient> Ingredient { get; set; }
         public DbSet<CompletedJob> CompletedJobs { get; set; }
+        public DbSet<RecurringTask> RecurringTasks { get; set; }
 
         public DbSet<Job> Tasks { get; set; }
+        public DbSet<Department> Departments { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -32,13 +36,15 @@ namespace CocktailCookbook.Data
             builder.Entity<CocktailIngredient>()
                 .HasKey(k => new { k.CocktailId, k.IngredientId });
 
+
+
             //builder.Entity<CompletedJob>().ToTable("CompletedJob");
             //builder.Entity<Job>().ToTable("Job");
             //attempting to model the jobs inheritance tree
+
         }
 
-        
-
+        public DbSet<CocktailCookbook.ViewModels.MakeRecurringViewModel> MakeRecurringViewModel { get; set; }
        
     }
 }

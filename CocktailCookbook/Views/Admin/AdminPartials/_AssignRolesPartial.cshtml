@@ -1,4 +1,4 @@
-﻿@model IEnumerable<CocktailCookbook.ViewModels.UsersRolesViewModel>
+﻿@model CocktailCookbook.ViewModels.AdminIndexViewModel
 
 
 
@@ -13,12 +13,14 @@
     @*after clicking the button the user is prompted to remove roles for selected user.*@
     <div class="overflow-scroll">
 
-        @{ foreach (var user in Model)
+        @{ foreach (var user in Model.UserRoles)
             {
                 <div>
-                    <span id="@user.UserId" class="userSpan" onclick="Transmit('@user.Name.ToString()', '@user.UserId.ToString()' ,'assign')">
-                        @user.Name is in the role of @user.AssignedRoles
-                    </span>
+                        <span id="@user.UserId" 
+                              class="userSpan" 
+                              onclick="Transmit('@user.Name.ToString()', '@user.UserId.ToString()' ,'assign')">
+                                       @user.Name is in the role of @user.AssignedRoles
+                        </span>
                 </div>
             }}
     </div>
@@ -35,11 +37,11 @@
 
                     @*list of checkboxes with available roles to assign*@
                     <div>
-                        @{ foreach (var role in ViewBag.ExistingRoles)
+                        @{ foreach (var role in Model.Roles)
                             {
                                 <div class="flex-column">
-                                    <label>@role.Name</label>
-                                    <input class="chkBoxAssign" type="checkbox" name="" value="@role.Name" />
+                                    <label>@role</label>
+                                    <input class="chkBoxAssign" type="checkbox" name="" value="@role" />
                                 </div>
                             }}
                         @*needs the model.Name*@
@@ -61,7 +63,7 @@
     <h4>Select the User</h4>
     <div class="overflow-scroll">
 
-        @{ foreach (var user in Model)
+        @{ foreach (var user in Model.UserRoles)
             {
                 <div>
                     <span id="@user.Name" class="userSpan" onclick="Transmit('@user.Name.ToString()', '@user.UserId.ToString()' ,'remove')" name="remove">
@@ -76,7 +78,7 @@
             <form asp-action="RemoveRoles" asp-controller="Admin">
                 <div class="form-group">                   
                     <div>
-                        @{ foreach (var role in ViewBag.ExistingRoles)
+                        @{ foreach (var role in Model.Roles)
                             {
                                 <div class="flex-column">
                                     <label>@role</label>

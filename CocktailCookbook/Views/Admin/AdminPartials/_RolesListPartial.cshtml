@@ -1,0 +1,22 @@
+﻿@model CocktailCookbook.ViewModels.AdminIndexViewModel
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Roles)
+            </th>
+            
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Roles) {
+        <tr>
+            <td>
+                @item
+            </td>               
+        </tr>
+}
+    </tbody>
+</table>

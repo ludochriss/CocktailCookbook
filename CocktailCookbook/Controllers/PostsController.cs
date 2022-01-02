@@ -84,6 +84,20 @@ namespace CocktailCookbook.Controllers
             //var p = new Post { Author = User.Identity.GetUserId() };
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var author =  _context.Staff.FirstOrDefault(s => s.UserId == userId);
+
+            if (author == null)
+            {
+               var u = new User
+                {
+                    UserId = User.FindFirstValue(ClaimTypes.NameIdentifier),
+                    NickName = "Unknown",
+                    Email = "Unknown"
+                };
+                author = u;
+                _context.Add(u);
+                _context.SaveChanges();
+               
+            }
             ViewBag.NickName = author.NickName;
 
             
@@ -216,27 +230,29 @@ namespace CocktailCookbook.Controllers
             //find the current users id
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             //match with database 
-            var author = _context.Staff.FirstOrDefault(s => s.UserId == userId);
+            var currentUser = await _context.Staff.FirstOrDefaultAsync(s=>s.UserId ==userId);
 
-            //bring the post from the database
-            var p = await _context.Post.FirstOrDefaultAsync(p => p.Id == id);
+
+            //bring the post from the database with author and comments
+            var p = await _context.Post.Include(p=>p.Author).Include(p=>p.Comments).FirstOrDefaultAsync(p => p.Id == id);
 
 
             //get the comments associated with the posts and store them in a list to be passed to the viewmodel
-            List<Comment> postComments =await  _context.Comment.Where(c => c.PostId == id).ToListAsync();
+           
             //pass original post data to the view via viewbag/ create new comment, with the data from the current user
-            ViewBag.OriginalAuthor = p.Author;
-            ViewBag.OriginalPost = p.Content;
+           
             
             var c = new ReplyCommentViewModel
             {
-                Author = author.NickName,
-                PostId = p.Id,
-                Comments = postComments
+                OriginalPost = p,
+                Author = currentUser         
+                
             };
-     
-         
+           
+
+
             return View(c);
+
         }
         [HttpPost, ActionName("Reply")]
         public async Task<IActionResult> Reply([Bind("Content,Author,PostId")]Comment comment)
@@ -273,9 +289,8 @@ namespace CocktailCookbook.Controllers
                  .FirstOrDefaultAsync();
 
             //checks the current user against the post's author and will allow edit or delete functionality within the view
-         
-            
-            ViewBag.OriginalAuthor = await IsCurrentUser(p.Author.UserId);
+           
+           
 
             var comments = await _context.Comment.
                 Where(c=>c.PostId ==id)

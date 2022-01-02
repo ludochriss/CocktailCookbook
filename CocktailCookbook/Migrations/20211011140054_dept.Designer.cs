@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CocktailCookbook.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20211005075340_initial")]
-    partial class initial
+    [Migration("20211011140054_dept")]
+    partial class dept
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -99,6 +99,21 @@ namespace CocktailCookbook.Migrations
                     b.ToTable("Comment");
                 });
 
+            modelBuilder.Entity("CocktailCookbook.Models.Department", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Departments");
+                });
+
             modelBuilder.Entity("CocktailCookbook.Models.Ingredient", b =>
                 {
                     b.Property<int>("Id")
@@ -127,6 +142,9 @@ namespace CocktailCookbook.Migrations
                     b.Property<string>("CreatorUserId")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<int?>("DepartmentId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Discriminator")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -143,6 +161,8 @@ namespace CocktailCookbook.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CreatorUserId");
+
+                    b.HasIndex("DepartmentId");
 
                     b.ToTable("Tasks");
 
@@ -408,6 +428,28 @@ namespace CocktailCookbook.Migrations
                     b.HasDiscriminator().HasValue("CompletedJob");
                 });
 
+            modelBuilder.Entity("CocktailCookbook.Models.RecurringTask", b =>
+                {
+                    b.HasBaseType("CocktailCookbook.Models.Job");
+
+                    b.Property<DateTime>("DailyTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<double>("HourlyFrequency")
+                        .HasColumnType("float");
+
+                    b.Property<bool>("RecursDaily")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("RecursHourly")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("RecursWeekly")
+                        .HasColumnType("bit");
+
+                    b.HasDiscriminator().HasValue("RecurringTask");
+                });
+
             modelBuilder.Entity("CocktailCookbook.Models.Cocktail", b =>
                 {
                     b.HasOne("CocktailCookbook.Models.User", "Creator")
@@ -429,6 +471,10 @@ namespace CocktailCookbook.Migrations
                     b.HasOne("CocktailCookbook.Models.User", "Creator")
                         .WithMany()
                         .HasForeignKey("CreatorUserId");
+
+                    b.HasOne("CocktailCookbook.Models.Department", "Department")
+                        .WithMany()
+                        .HasForeignKey("DepartmentId");
                 });
 
             modelBuilder.Entity("CocktailCookbook.Models.Post", b =>

@@ -1,13 +1,12 @@
-﻿using System;
+﻿using CocktailCookbook.Models;
+using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace CocktailCookbook.Models
+namespace CocktailCookbook.ViewModels
 {
-  
-    public  class Job
+    public class CreateJobViewModel
     {
         public int Id { get; set; }
 
@@ -17,7 +16,7 @@ namespace CocktailCookbook.Models
 
         public DateTime TimeCreated { get; set; }
 
-        public Department Department { get; set; }
+        public string Department { get; set; }
         public string TaskDescription { get; set; }
 
     }

@@ -1,21 +1,25 @@
-﻿@model IEnumerable<CocktailCookbook.ViewModels.UsersRolesViewModel>
+﻿@model CocktailCookbook.ViewModels.AdminIndexViewModel
 
 <h1>Admin</h1>
 
-<a asp-action="CreateRole">Create New Role</a>
+<a class="btn btn-success" asp-action="CreateRole">Create New Role</a>
+<a class="btn btn-success" asp-action="CreateDepartment">Create New Department</a>
 
 <nav>
     <div class="nav nav-tabs" id="nav-tab" role="tablist">
         <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Roles</button>
 
         <button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#nav-contact" type="button" role="tab" aria-controls="nav-contact" aria-selected="false">Assign/Remove Role</button>
+        <button class="nav-link" id="nav-roles-tab" data-bs-toggle="tab" data-bs-target="#nav-roles" type="button" role="tab" aria-controls="nav-roles" aria-selected="false">Existing Roles</button>
+        <button class="nav-link" id="nav-dept-tab" data-bs-toggle="tab" data-bs-target="#nav-dept" type="button" role="tab" aria-controls="nav-dept" aria-selected="false">Departments</button>
+
     </div>
 </nav>
 
 <div class="tab-content" id="nav-tabContent">
-    
+
     <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
-        <h4>Current Roles</h4>
+        <h4>Current Users and their Roles</h4>
         <table class="table table-striped">
 
             <thead>
@@ -26,7 +30,7 @@
             </thead>
 
             <tbody>
-                @foreach (var r in Model)
+                @foreach (var r in Model.UserRoles)
                 {
                     <tr>
                         <td>@r.Name</td>
@@ -39,7 +43,13 @@
     </div>
 
     <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">
-        <partial name="_AssignRolesPartial" model="Model" />
+        <partial name="~/Views/Admin/AdminPartials/_AssignRolesPartial.cshtml" model="Model" />
+    </div>
+    <div class="tab-pane fade" id="nav-roles" role="tabpanel" aria-labelledby="nav-roles-tab">
+        <partial name="~/Views/Admin/AdminPartials/_RolesListPartial.cshtml" model="Model" />
+    </div>
+    <div class="tab-pane fade" id="nav-dept" role="tabpanel" aria-labelledby="nav-dept-tab">
+        <partial name="~/Views/Admin/AdminPartials/_DepartmentListPartial.cshtml" model="Model.Departments" />
     </div>
 </div>
 

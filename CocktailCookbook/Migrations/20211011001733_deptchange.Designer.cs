@@ -4,14 +4,16 @@ using CocktailCookbook.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace CocktailCookbook.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211011001733_deptchange")]
+    partial class deptchange
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -430,20 +432,8 @@ namespace CocktailCookbook.Migrations
                 {
                     b.HasBaseType("CocktailCookbook.Models.Job");
 
-                    b.Property<DateTime>("DailyTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<double>("HourlyFrequency")
-                        .HasColumnType("float");
-
-                    b.Property<bool>("RecursDaily")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("RecursHourly")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("RecursWeekly")
-                        .HasColumnType("bit");
+                    b.Property<string>("Frequency")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasDiscriminator().HasValue("RecurringTask");
                 });

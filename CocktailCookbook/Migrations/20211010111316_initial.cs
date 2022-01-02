@@ -60,6 +60,19 @@ namespace CocktailCookbook.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Departments",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Departments", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Ingredient",
                 columns: table => new
                 {
@@ -249,10 +262,12 @@ namespace CocktailCookbook.Migrations
                     Name = table.Column<string>(nullable: true),
                     CreatorUserId = table.Column<string>(nullable: true),
                     TimeCreated = table.Column<DateTime>(nullable: false),
+                    Department = table.Column<string>(nullable: true),
                     TaskDescription = table.Column<string>(nullable: true),
                     Discriminator = table.Column<string>(nullable: false),
                     TimeCompleted = table.Column<DateTime>(nullable: true),
-                    MarkedCompleteByUserId = table.Column<string>(nullable: true)
+                    MarkedCompleteByUserId = table.Column<string>(nullable: true),
+                    Frequency = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -382,6 +397,9 @@ namespace CocktailCookbook.Migrations
 
             migrationBuilder.DropTable(
                 name: "Comment");
+
+            migrationBuilder.DropTable(
+                name: "Departments");
 
             migrationBuilder.DropTable(
                 name: "Ingredient");
