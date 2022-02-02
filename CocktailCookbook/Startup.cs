@@ -28,7 +28,10 @@ namespace CocktailCookbook
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-     
+
+            //having trouble connecting to a database? Try and change the database in appsettings.Json
+            
+                //Change this line and add appropriate packages for using another database for the context layer
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));

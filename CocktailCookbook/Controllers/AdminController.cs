@@ -1,16 +1,13 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
-using CocktailCookbook.Data;
+﻿using CocktailCookbook.Data;
 using CocktailCookbook.Models;
 using CocktailCookbook.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace CocktailCookbook.Controllers
 {
@@ -30,7 +27,10 @@ namespace CocktailCookbook.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            //perhaps this is getting too chunky
+            // loads the index page which contains the most information for a single request
+
+            //--EXPLORE OPTIONS TO REFACTOR FOR EFFICIENCY
+            // ---perhaps this is getting too chunky---
             // separates out roles 
             var rolesList = await _context.Roles.ToListAsync();
             var user = await userManager.GetUserAsync(User);
@@ -51,25 +51,33 @@ namespace CocktailCookbook.Controllers
                 
             }
             var vm = new AdminIndexViewModel();
+
+            //gets a list of roles
             var vmRoles = new List<string>();
             foreach (var r in rolesList)
             {
                 vmRoles.Add(r.Name);
             }
+
+            //gets list of departments
             var deptList = await _context.Departments.ToListAsync();
+
+            //adds all users, associated roles and departments to viewmodel
 
             vm.Roles = vmRoles;
             vm.UserRoles = list;
             vm.Departments = deptList;
-
+              //aspects of the view model are then passed as parameters to partial views within the view --Not sure best practice--    
             
             return View(vm);
         }
 
+
+       //Gets the role view for the user 
         [HttpGet]
         public async Task<IActionResult> CreateRole()
         {
-
+            //gets all current roles
             var uR = await _context.Roles.ToListAsync();
             List<CreateRoleViewModel> crvm = new List<CreateRoleViewModel>();
             foreach (var r in uR)
@@ -80,6 +88,8 @@ namespace CocktailCookbook.Controllers
             ViewBag.Roles = crvm;
             return View();
         }
+
+        //creates a new role from user input
         [HttpPost]
         
         public async Task<IActionResult> CreateRole(CreateRoleViewModel role)
@@ -98,8 +108,8 @@ namespace CocktailCookbook.Controllers
             return RedirectToAction(nameof(CreateRole));
         }
 
+        //gets the assings roles page
         [HttpGet]
-
         public IActionResult AssignRoles()
         {
            var roles =  roleManager.Roles.ToListAsync();         
@@ -108,6 +118,7 @@ namespace CocktailCookbook.Controllers
             
             return View();
         }
+        //assigns roles based on user selection, binds some attributes and assigns others manually
         [HttpPost]
         public async Task<IActionResult> AssignRoles([Bind("UserId,Name,AssignedRoles")] UsersRolesViewModel ur)
         {
@@ -140,12 +151,14 @@ namespace CocktailCookbook.Controllers
             
             
         }
+        //gets create department view
         [HttpGet]
         public IActionResult CreateDepartment()
         {
             return View();
         }
 
+        //assigns new department based on user input
         [HttpPost]
         public async Task<IActionResult> CreateDepartment([Bind("Id,Name")] Department dept)
         {
@@ -155,6 +168,7 @@ namespace CocktailCookbook.Controllers
                 await _context.SaveChangesAsync();
             }
           
+            //redirects to page if model is invalid
             else
             {
                 return RedirectToAction(nameof(CreateDepartment));
@@ -164,7 +178,7 @@ namespace CocktailCookbook.Controllers
         }
 
 
-
+        //removes roles from the list of roles
         [HttpPost]
         public async Task<IActionResult> RemoveRoles([Bind("UserId,Name,AssignedRoles")] UsersRolesViewModel ur)
         {
