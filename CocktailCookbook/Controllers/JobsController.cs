@@ -26,6 +26,10 @@ namespace CocktailCookbook.Controllers
         }
 
         // GET: Jobs
+
+        //Jobs controller is currently under construction and will be finished soon.
+
+        //TASKS CAN BE CREATED HOWEVER RECURRING TASKS CANNOT BE SET YET.
         public async Task<IActionResult> Index()
         {
             var allJobs = await _context.Tasks.Include(t=>t.Department).Include(t=>t.Department).ToListAsync();
@@ -108,8 +112,11 @@ namespace CocktailCookbook.Controllers
 
             return View();
         }
-        //modifies existing tasks to become recurrant tasks
 
+
+
+        //modifies existing tasks to become recurrant tasks
+        //brings the list of tasts and tabs for the user to view different kinds of tasks.
         [HttpGet]
         public async Task<IActionResult> TaskManagement()
         {
@@ -137,7 +144,8 @@ namespace CocktailCookbook.Controllers
  
         public List<SelectListItem> GetHourlyFrequencyList()
         {
-
+            //should not hard code for obvious reasons, can be done better.
+            
             var hourlyFrequency = new List<SelectListItem>
             {
                  new SelectListItem{Value="0", Text = "No Hourly Recurrance"},
@@ -174,15 +182,18 @@ namespace CocktailCookbook.Controllers
             //int deptId = Convert.ToInt32(job.Department);
             var user = await _um.GetUserAsync(User);       
                        
+            //checks if signed in for naming 
             if (_sm.IsSignedIn(User))
             {
                 job.Creator = await _context.Staff.FirstOrDefaultAsync(u => u.UserId == user.Id);
             }
+            //if user is not signed in, gives unknown user, shouldn't get this far without it anyway, but just incase
             else
             {
                 job.Creator = new User { NickName = "Unknown User", Email = "Unknown User" };
             }
         
+            //checks model state
             if (ModelState.IsValid)
             {
                 var newJob = new Job
@@ -204,7 +215,6 @@ namespace CocktailCookbook.Controllers
                     newJob.Department = new Department
                     {
                         Name = "None"
-
                     };
                 }
                 _context.Add(newJob);
@@ -213,7 +223,6 @@ namespace CocktailCookbook.Controllers
             }
             return View(job);
         }
-
 
         // GET: Jobs/Edit/5
         public async Task<IActionResult> Edit(int? id)
@@ -270,14 +279,16 @@ namespace CocktailCookbook.Controllers
             return View(job);
         }
 
+        //gets recurring job page.
         [HttpGet]
         public async Task<IActionResult> MakeRecurringJob(int? id)
         {
+            //refactor this code to get all information in a single call, needs to be condensed.
             if (id == null)
             {
                 return NotFound();
             }
-
+            //bring the department that the job is assigned to
             var job = await _context.Tasks.Include(d=>d.Department).FirstOrDefaultAsync(t=>t.Id == id);
             if (job == null)
             {
@@ -302,6 +313,9 @@ namespace CocktailCookbook.Controllers
 
            
         }
+
+        //method not finished
+
         [HttpPost]
         public async Task<IActionResult> MakeRecurringJob(int? id, [Bind("Id,Name,TaskDescription,RecursDaily,DailyTime,RecursHourly,RecursWeekly,HourlyFrequency,Creator")]
         RecurringTask recurringJob)

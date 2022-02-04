@@ -44,6 +44,8 @@ namespace CocktailCookbook.Data
 
             public static void SeedRoles(RoleManager<IdentityRole> roleManager)
             {
+            try
+            {
                 if (!roleManager.RoleExistsAsync("Administrator").Result)
                 {
                     var role = new IdentityRole
@@ -52,6 +54,13 @@ namespace CocktailCookbook.Data
                     };
                     roleManager.CreateAsync(role).Wait();
                 }
+            }
+            catch (Exception e)
+            {
+
+                throw e;
+            }
+              
             }
         }
     }
