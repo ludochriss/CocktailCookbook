@@ -1,4 +1,8 @@
 This is a basic overview of the proof of concept for the CookBook
+Asp.net Core v3.1
+bootstrap
+EF core
+
 
 This was designed as a proof of concept, to help management in the hospitality industry by keeping a digital record of Drinks and ingredients for recipes that can be accessed by staff via the Order Display Monitor(ODM)
 Later being expanded to keep track of departments, roles and tasks both recurrant and non-recurrant to help with the high turn over of staff that occurs and the loss of procedures and information that results.
