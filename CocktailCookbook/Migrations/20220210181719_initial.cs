@@ -232,6 +232,40 @@ namespace CocktailCookbook.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "MakeRecurringViewModel",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(nullable: true),
+                    CreatorUserId = table.Column<string>(nullable: true),
+                    TimeCreated = table.Column<DateTime>(nullable: false),
+                    DepartmentId = table.Column<int>(nullable: true),
+                    TaskDescription = table.Column<string>(nullable: true),
+                    RecursWeekly = table.Column<bool>(nullable: false),
+                    RecursDaily = table.Column<bool>(nullable: false),
+                    RecursHourly = table.Column<bool>(nullable: false),
+                    DailyTime = table.Column<DateTime>(nullable: false),
+                    HourlyFrequency = table.Column<double>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MakeRecurringViewModel", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_MakeRecurringViewModel_Staff_CreatorUserId",
+                        column: x => x.CreatorUserId,
+                        principalTable: "Staff",
+                        principalColumn: "UserId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_MakeRecurringViewModel_Departments_DepartmentId",
+                        column: x => x.DepartmentId,
+                        principalTable: "Departments",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Post",
                 columns: table => new
                 {
@@ -262,12 +296,16 @@ namespace CocktailCookbook.Migrations
                     Name = table.Column<string>(nullable: true),
                     CreatorUserId = table.Column<string>(nullable: true),
                     TimeCreated = table.Column<DateTime>(nullable: false),
-                    Department = table.Column<string>(nullable: true),
+                    DepartmentId = table.Column<int>(nullable: true),
                     TaskDescription = table.Column<string>(nullable: true),
                     Discriminator = table.Column<string>(nullable: false),
                     TimeCompleted = table.Column<DateTime>(nullable: true),
                     MarkedCompleteByUserId = table.Column<string>(nullable: true),
-                    Frequency = table.Column<string>(nullable: true)
+                    RecursWeekly = table.Column<bool>(nullable: true),
+                    RecursDaily = table.Column<bool>(nullable: true),
+                    RecursHourly = table.Column<bool>(nullable: true),
+                    DailyTime = table.Column<DateTime>(nullable: true),
+                    HourlyFrequency = table.Column<double>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -284,13 +322,20 @@ namespace CocktailCookbook.Migrations
                         principalTable: "Staff",
                         principalColumn: "UserId",
                         onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Tasks_Departments_DepartmentId",
+                        column: x => x.DepartmentId,
+                        principalTable: "Departments",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Comment",
                 columns: table => new
                 {
-                    Id = table.Column<string>(nullable: false),
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     Author = table.Column<string>(nullable: true),
                     Time = table.Column<DateTime>(nullable: false),
                     Content = table.Column<string>(nullable: true),
@@ -357,6 +402,16 @@ namespace CocktailCookbook.Migrations
                 column: "PostId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_MakeRecurringViewModel_CreatorUserId",
+                table: "MakeRecurringViewModel",
+                column: "CreatorUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MakeRecurringViewModel_DepartmentId",
+                table: "MakeRecurringViewModel",
+                column: "DepartmentId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Post_AuthorUserId",
                 table: "Post",
                 column: "AuthorUserId");
@@ -370,6 +425,11 @@ namespace CocktailCookbook.Migrations
                 name: "IX_Tasks_CreatorUserId",
                 table: "Tasks",
                 column: "CreatorUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Tasks_DepartmentId",
+                table: "Tasks",
+                column: "DepartmentId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -399,10 +459,10 @@ namespace CocktailCookbook.Migrations
                 name: "Comment");
 
             migrationBuilder.DropTable(
-                name: "Departments");
+                name: "Ingredient");
 
             migrationBuilder.DropTable(
-                name: "Ingredient");
+                name: "MakeRecurringViewModel");
 
             migrationBuilder.DropTable(
                 name: "Tasks");
@@ -415,6 +475,9 @@ namespace CocktailCookbook.Migrations
 
             migrationBuilder.DropTable(
                 name: "Post");
+
+            migrationBuilder.DropTable(
+                name: "Departments");
 
             migrationBuilder.DropTable(
                 name: "Staff");

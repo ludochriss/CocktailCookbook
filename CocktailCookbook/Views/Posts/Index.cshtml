@@ -44,7 +44,7 @@
             </td>
             <td>
                 @*make the number of comments a number and if the number is greater than 0 be able to click on it and navigate to the necessary*@
-                <button class="btn btn-primary" asp-action="ViewThread" asp-route-id="@item.Id">Comments</button>
+                <a class="btn btn-primary" asp-action="ViewThread" asp-route-id="@item.Id">Comments</a>
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Author.NickName)
@@ -52,12 +52,12 @@
             <td class="justify-content-around">
                 @if (true)
                 {
-                    <button class="btn btn-danger" asp-action="Delete" asp-route-id="@item.Id">Delete</button>
-                    <btn class="btn btn-warning" asp-action="Edit" asp-route-id="@item.Id">Edit</btn>
+                    <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    <a class="btn btn-warning" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
 
                 }
-                <btn class="btn btn-info" asp-action="Details" asp-route-id="@item.Id">Details</btn>
-                <btn class="btn btn-success" asp-action="Reply" asp-route-id="@item.Id">Reply</btn>
+                <a class="btn btn-info" asp-action="Details" asp-route-id="@item.Id">Details</a>
+                <a class="btn btn-success" asp-action="Reply" asp-route-id="@item.Id">Reply</a>
             </td>
         </tr>
 }   

@@ -255,16 +255,16 @@ namespace CocktailCookbook.Controllers
 
         }
         [HttpPost, ActionName("Reply")]
-        public async Task<IActionResult> Reply([Bind("Content,Author,PostId")]Comment comment)
+        public async Task<IActionResult> Reply([Bind("Id,Content,Author,PostId")]Comment comment)
         {
 
-
+           
             if (ModelState.IsValid)
             {
                 comment.Time = DateTime.Now;
-                var comments  = _context.Comment.ToList();
-                int length = comments.Count();
-                comment.Id = comment.PostId +"-" + length.ToString();
+               // var comments  = _context.Comment.ToList();
+                //int length = comments.Count();
+                //comment.Id = comment.PostId +"-" + length.ToString();
 
                  _context.Comment.Add(comment);
               await _context.SaveChangesAsync();

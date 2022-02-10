@@ -75,8 +75,10 @@ namespace CocktailCookbook.Migrations
 
             modelBuilder.Entity("CocktailCookbook.Models.Comment", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Author")
                         .HasColumnType("nvarchar(max)");
@@ -209,6 +211,52 @@ namespace CocktailCookbook.Migrations
                     b.HasKey("UserId");
 
                     b.ToTable("Staff");
+                });
+
+            modelBuilder.Entity("CocktailCookbook.ViewModels.MakeRecurringViewModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("CreatorUserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("DailyTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("DepartmentId")
+                        .HasColumnType("int");
+
+                    b.Property<double>("HourlyFrequency")
+                        .HasColumnType("float");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("RecursDaily")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("RecursHourly")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("RecursWeekly")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("TaskDescription")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("TimeCreated")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatorUserId");
+
+                    b.HasIndex("DepartmentId");
+
+                    b.ToTable("MakeRecurringViewModel");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -480,6 +528,17 @@ namespace CocktailCookbook.Migrations
                     b.HasOne("CocktailCookbook.Models.User", "Author")
                         .WithMany()
                         .HasForeignKey("AuthorUserId");
+                });
+
+            modelBuilder.Entity("CocktailCookbook.ViewModels.MakeRecurringViewModel", b =>
+                {
+                    b.HasOne("CocktailCookbook.Models.User", "Creator")
+                        .WithMany()
+                        .HasForeignKey("CreatorUserId");
+
+                    b.HasOne("CocktailCookbook.Models.Department", "Department")
+                        .WithMany()
+                        .HasForeignKey("DepartmentId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
