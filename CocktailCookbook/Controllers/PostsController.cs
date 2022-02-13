@@ -232,41 +232,39 @@ namespace CocktailCookbook.Controllers
             //match with database 
             var currentUser = await _context.Staff.FirstOrDefaultAsync(s=>s.UserId ==userId);
 
-
             //bring the post from the database with author and comments
             var p = await _context.Post.Include(p=>p.Author).Include(p=>p.Comments).FirstOrDefaultAsync(p => p.Id == id);
 
-
-            //get the comments associated with the posts and store them in a list to be passed to the viewmodel
-           
-            //pass original post data to the view via viewbag/ create new comment, with the data from the current user
-           
-            
             var c = new ReplyCommentViewModel
             {
-                OriginalPost = p,
-                Author = currentUser         
+                PostId = p.Id,
+                PostTitle = p.Title,
+                PostContent = p.Content,
+                PostAuthor = p.Author.NickName,
+                AuthorUserId = p.Author.UserId,
+                Author = currentUser.UserId,
+                Comments = p.Comments
                 
-            };
-           
 
-
+            };           
             return View(c);
 
         }
         [HttpPost, ActionName("Reply")]
-        public async Task<IActionResult> Reply([Bind("Id,Content,Author,PostId")]Comment comment)
+        public async Task<IActionResult> Reply([Bind("Id,Content,Author,PostId,PostTitle,PostContent,PostAuthor,AuthorUserId")]ReplyCommentViewModel cvm)
         {
-
-           
+                       
             if (ModelState.IsValid)
             {
-                comment.Time = DateTime.Now;
-               // var comments  = _context.Comment.ToList();
-                //int length = comments.Count();
-                //comment.Id = comment.PostId +"-" + length.ToString();
+                var comment = new Comment
+                {
+                    Time = DateTime.Now,
+                    PostId = cvm.PostId,
+                    AuthorId = cvm.AuthorUserId,
+                    Content = cvm.Content
 
-                 _context.Comment.Add(comment);
+                };
+                   _context.Add(comment);
               await _context.SaveChangesAsync();
 
                  }

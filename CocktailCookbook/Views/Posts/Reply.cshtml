@@ -19,8 +19,10 @@
 
             </div>
             <div class="form-group">
-                <label class="control-label">Replying to @Model.OriginalPost.Author.NickName on : @Model.OriginalPost.Content </label>
-                <input asp-for="Id" class="form-control" value="@Model.OriginalPost.Id" hidden />
+                <label class="control-label">Replying to @Model.PostAuthor on : @Model.PostTitle </label>
+
+
+                <input asp-for="PostId" class="form-control" value="@Model.PostId" hidden />
 
             </div>
             <div class="form-group">
@@ -29,7 +31,10 @@
 
                 <span asp-validation-for="Content" class="text-danger"></span>
             </div>
-            <input asp-for="Author" class="form-control" hidden value="@Model.Author" />
+
+            <input asp-for="AuthorUserId" class="form-control" hidden value="@Model.AuthorUserId" />
+          
+
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
@@ -41,7 +46,7 @@
     <a asp-action="Index">Back to List</a>
 </div>
 
-@{ foreach (var comment in Model.OriginalPost.Comments)
+@{ foreach (var comment in Model.Comments)
     {
         <div>
                         

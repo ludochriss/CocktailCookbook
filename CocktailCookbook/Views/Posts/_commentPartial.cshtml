@@ -1,7 +1,13 @@
 ﻿@model Comment
 
-<div>
-    <p>on @Model.Time.ToLongDateString() at @Model.Time.ToShortTimeString() by @Model.Author :</p>
-    <p>@Model.Content</p>
+<div class="card">
+    <div class="card-header">
+        <h4>on @Model.Time.ToLongDateString() at @Model.Time.ToShortTimeString() by @Model.Author.NickName :</h4>
+    </div>
+    <div class="card-body">
+     
+        <p>@Model.Content</p>
+    </div>
+   
 </div>
 

@@ -17,71 +17,71 @@
 
     <div class="container-fluid" id="wrapper">
         @*this is the sidebar*@
-       @*TODO: change local storage to remember that the nav bar is open*@
-        
+        @*TODO: change local storage to remember that the nav bar is open*@
+
         <div class="container-fluid" id="sidebar">
-            
-                <a class="" asp-area="" asp-controller="Home" asp-action="Index"><h3>Cocktail Cookbook</h3></a>
-           
+
+            <a class="" asp-area="" asp-controller="Home" asp-action="Index"><h3>Cocktail Cookbook</h3></a>
+
             @*Nav Options*@
-        <ul class="list-unstyled">
-            <li>
-                <a class="list-group-item list-group-item-action list-group-item-light p-2" asp-controller="Home" asp-action="Index">Home</a>
-            </li>
-            <li>
-                <a class="list-group-item list-group-item-action list-group-item-light p-2" asp-controller="Posts" asp-action="Index">Posts</a>
-            </li>
-            <li>
-                <a class="list-group-item list-group-item-action list-group-item-light p-2 dropdown-toggle" data-toggle="collapse" aria-expanded="false" href="#cocktailSubmenu">Cocktails</a>
-                <ul class="collapse list-unstyled" data-toggle="collapse" aria-expanded="false" id="cocktailSubmenu">
-                    <li>
-                        <a class="list-group-item list-group-item-action list-group-item-light p-2" asp-area="" asp-controller="Cocktails" asp-action="Create">Create New Cocktail</a>
-                    </li>
+            <ul class="list-unstyled">
+                <li>
+                    <a class="list-group-item list-group-item-action list-group-item-light p-2" asp-controller="Home" asp-action="Index">Home</a>
+                </li>
+                <li>
+                    <a class="list-group-item list-group-item-action list-group-item-light p-2" asp-controller="Posts" asp-action="Index">Posts</a>
+                </li>
+                <li>
+                    <a class="list-group-item list-group-item-action list-group-item-light p-2 dropdown-toggle" data-toggle="collapse" aria-expanded="false" href="#cocktailSubmenu">Cocktails</a>
+                    <ul class="collapse list-unstyled" data-toggle="collapse" aria-expanded="false" id="cocktailSubmenu">
+                        <li>
+                            <a class="list-group-item list-group-item-action list-group-item-light p-2" asp-area="" asp-controller="Cocktails" asp-action="Create">Create New Cocktail</a>
+                        </li>
 
-                    <li>
-                        <a class="list-group-item list-group-item-action list-group-item-light p-2" asp-area="" asp-controller="Cocktails" asp-action="Index">Index</a>
-                    </li>
+                        <li>
+                            <a class="list-group-item list-group-item-action list-group-item-light p-2" asp-area="" asp-controller="Cocktails" asp-action="Index">Index</a>
+                        </li>
 
-                </ul>
+                    </ul>
 
-            </li>
-            @{ if (sim.IsSignedIn(User))
-                {
-                    <li>
-                        <a class="list-group-item list-group-item-action list-group-item-light p-2" asp-area="" asp-controller="Jobs" asp-action="Index">Jobs</a>
+                </li>
+                @{ if (sim.IsSignedIn(User))
+                    {
+                        <li>
+                            <a class="list-group-item list-group-item-action list-group-item-light p-2" asp-area="" asp-controller="Jobs" asp-action="Index">Jobs</a>
 
-                    </li>
-                    <li>
-                        <a class="list-group-item list-group-item-action list-group-item-light p-2" asp-controller="Admin" asp-action="Index">Admin</a>
-                    </li>
-                    <li>
-                        <a class="list-group-item list-group-item-action list-group-item-light p-2" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @User.Identity.Name!</a>
-                    </li>
-                    <li>
-                        <a class="list-group-item list-group-item-action list-group-item-light p-2" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-                            Logout
-                        </a>
-                    </li>
+                        </li>
+                        <li>
+                            <a class="list-group-item list-group-item-action list-group-item-light p-2" asp-controller="Admin" asp-action="Index">Admin</a>
+                        </li>
+                        <li>
+                            <a class="list-group-item list-group-item-action list-group-item-light p-2" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @User.Identity.Name!</a>
+                        </li>
+                        <li>
+                            <a class="list-group-item list-group-item-action list-group-item-light p-2" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                                Logout
+                            </a>
+                        </li>
+                    }
+                    else
+                    {
+                        <li>
+                            <a class="list-group-item list-group-item-action list-group-item-light p-2" asp-area="Identity" asp-page="/Account/Register">Register</a>
+                        </li>
+                        <li>
+                            <a class="list-group-item list-group-item-action list-group-item-light p-2" asp-area="Identity" asp-page="/Account/Login">Login</a>
+                        </li>
+                    }
                 }
-                else
-                {
-                    <li>
-                        <a class="list-group-item list-group-item-action list-group-item-light p-2" asp-area="Identity" asp-page="/Account/Register">Register</a>
-                    </li>
-                    <li>
-                        <a class="list-group-item list-group-item-action list-group-item-light p-2" asp-area="Identity" asp-page="/Account/Login">Login</a>
-                    </li>
-                }
-            }
-        </ul>
+            </ul>
         </div>
 
         @*This is the main page*@
         <div class="container-fluid" id="content">
 
-            
-            <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-               
+
+            <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light border-bottom box-shadow mb-3" id="nav-bar">
+
                 <button type="button" id="navToggle" class="btn btn-info">
                     <i class="fas fa-align-left"></i>
                     <span id="toggleText">&#9776;</span>
@@ -98,7 +98,7 @@
                         </li>
                         @{ if (sim.IsSignedIn(User))
                             {
-                                <li class="nav-item">
+                                <li class="nav-item ">
                                     <a class="nav-link text-dark" asp-area="" asp-controller="Posts" asp-action="Index">Posts</a>
                                 </li>
                                 <li class="nav-item">
@@ -110,7 +110,7 @@
                                 <li class="nav-item">
                                     <a class="nav-link text-dark" asp-controller="Admin" asp-action="Index">Admin</a>
                                 </li>
-                          
+
                             }
 
                         }
@@ -119,8 +119,9 @@
 
             </nav>
 
-            
+
             <main role="main" class="container-fluid pb-3">
+
                 @RenderBody()
 
 
@@ -143,15 +144,15 @@
         }
 
         function closeNav() {
-            document.getElementById("sidebar").style.left =-150;
+            document.getElementById("sidebar").style.left = -150;
         }
     </script>
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
- <script src="~/js/layout.js"></script>
-    
- 
+    <script src="~/js/layout.js"></script>
+
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
     @RenderSection("Scripts", required: false)
 </body>
