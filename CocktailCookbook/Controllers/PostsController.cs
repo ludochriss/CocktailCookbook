@@ -229,9 +229,15 @@ namespace CocktailCookbook.Controllers
             }
             //find the current users id
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            //var uid = _um.
             //match with database 
             var currentUser = await _context.Staff.FirstOrDefaultAsync(s=>s.UserId ==userId);
-
+            if (currentUser == null)
+            {
+                
+               
+            }
             //bring the post from the database with author and comments
             var p = await _context.Post.Include(p=>p.Author).Include(p=>p.Comments).FirstOrDefaultAsync(p => p.Id == id);
 

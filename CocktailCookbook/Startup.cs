@@ -62,7 +62,7 @@ namespace CocktailCookbook
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager)
+        public  void Configure(IApplicationBuilder app, IWebHostEnvironment env, UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager, ApplicationDbContext context)
         {
             if (env.IsDevelopment())
             {
@@ -94,7 +94,17 @@ namespace CocktailCookbook
                     pattern: "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
             });
-            ApplicationDataInitialiser.SeedData(userManager, roleManager);
+            string dbConnection = Configuration.GetConnectionString("Default Connection");
+            
+
+            //initialises new application data
+           
+           
+              
+                ApplicationDataInitialiser.SeedData(userManager, roleManager, context);
+            
+            
+            
         }
       
  
