@@ -23,7 +23,7 @@ namespace CocktailCookbook.Controllers
             _context = context;
             this.userManager = userManager;
         }
-    
+
         [HttpGet]
         public async Task<IActionResult> Index()
         {
@@ -35,8 +35,8 @@ namespace CocktailCookbook.Controllers
             var rolesList = await _context.Roles.ToListAsync();
             var user = await userManager.GetUserAsync(User);
             //var inRole = await userManager.GetRolesAsync(user);
-            
-           
+
+
             List<UsersRolesViewModel> list = new List<UsersRolesViewModel>();
             //gets a list of users
             var x = await _context.Users.ToListAsync();
@@ -48,7 +48,7 @@ namespace CocktailCookbook.Controllers
                     Name = u.UserName,
                     AssignedRoles = string.Join(",", await userManager.GetRolesAsync(u))
                 });
-                
+
             }
             var vm = new AdminIndexViewModel();
 
@@ -67,13 +67,13 @@ namespace CocktailCookbook.Controllers
             vm.Roles = vmRoles;
             vm.UserRoles = list;
             vm.Departments = deptList;
-              //aspects of the view model are then passed as parameters to partial views within the view --Not sure best practice--    
-            
+            //aspects of the view model are then passed as parameters to partial views within the view --Not sure best practice--    
+
             return View(vm);
         }
 
 
-       //Gets the role view for the user 
+        //Gets the role view for the user 
         [HttpGet]
         public async Task<IActionResult> CreateRole()
         {
@@ -91,18 +91,18 @@ namespace CocktailCookbook.Controllers
 
         //creates a new role from user input
         [HttpPost]
-        
+
         public async Task<IActionResult> CreateRole(CreateRoleViewModel role)
         {
-           //create role
-            var roleExist = await  roleManager.RoleExistsAsync(role.Name);
+            //create role
+            var roleExist = await roleManager.RoleExistsAsync(role.Name);
             if (!roleExist)
             {
                 var newRole = new IdentityRole(role.Name);
                 var result = await roleManager
                 .CreateAsync(newRole);
                 //create role claim
-               //var claim = roleManager.AddClaimAsync(newRole, new Claim(role.Name, role.Name));
+                //var claim = roleManager.AddClaimAsync(newRole, new Claim(role.Name, role.Name));
             }
             //TODO: May need to remove above claims. still doesn't seem to be working
             return RedirectToAction(nameof(CreateRole));
@@ -112,10 +112,10 @@ namespace CocktailCookbook.Controllers
         [HttpGet]
         public IActionResult AssignRoles()
         {
-           var roles =  roleManager.Roles.ToListAsync();         
+            var roles = roleManager.Roles.ToListAsync();
 
             //needs a list of staff, list of roles
-            
+
             return View();
         }
         //assigns roles based on user selection, binds some attributes and assigns others manually
@@ -148,8 +148,8 @@ namespace CocktailCookbook.Controllers
             {
                 return RedirectToAction(nameof(Index));
             }
-            
-            
+
+
         }
         //gets create department view
         [HttpGet]
@@ -167,7 +167,7 @@ namespace CocktailCookbook.Controllers
                 _context.Departments.Add(dept);
                 await _context.SaveChangesAsync();
             }
-          
+
             //redirects to page if model is invalid
             else
             {
@@ -182,15 +182,46 @@ namespace CocktailCookbook.Controllers
         [HttpPost]
         public async Task<IActionResult> RemoveRoles([Bind("UserId,Name,AssignedRoles")] UsersRolesViewModel ur)
         {
-            
-           var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == ur.UserId);
+
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == ur.UserId);
             var userRoles = await userManager.GetRolesAsync(user);
             List<string> roles = ur.AssignedRoles.Split(",").ToList();
-                    
-           IdentityResult result = await userManager.RemoveFromRolesAsync(user, roles);
-                       
-         
+
+            IdentityResult result = await userManager.RemoveFromRolesAsync(user, roles);
+
+
             return RedirectToAction(nameof(Index));
-        }       
+        }
+
+        public async Task<IActionResult> DeleteDepartment(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var dpt = await _context.Departments
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (dpt == null)
+            {
+                return NotFound();
+            }
+
+            return View(dpt);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteDepartment(int id)
+        {
+            var dpt =await _context.Departments.FirstOrDefaultAsync(d => d.Id == id);
+             if (dpt == null)
+            {
+                return NotFound();
+            }
+            _context.Remove(dpt);
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Index");
+
+        }
     }
 }
