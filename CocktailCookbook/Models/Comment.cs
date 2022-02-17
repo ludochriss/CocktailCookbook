@@ -9,6 +9,7 @@ namespace CocktailCookbook.Models
 {
     public class Comment
     {
+        [Key]
         public int Id { get; set; }
 
         public User Author { get; set; }
