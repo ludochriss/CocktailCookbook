@@ -8,7 +8,7 @@ namespace CocktailCookbook.ViewModels
 {
     public class TaskManagementViewModel
     {
-        public List<Job> Jobs { get; set; }
+        public List<Models.Task> Jobs { get; set; }
 
         public List<RecurringTask> RecurringTasks { get; set; }
     }

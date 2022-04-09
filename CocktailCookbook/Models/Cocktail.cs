@@ -1,12 +1,15 @@
 ﻿
+using CocktailCookbook.Interfaces;
+using CocktailCookbook.ViewModels;
 using Microsoft.AspNetCore.Http;
-
+using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CocktailCookbook.Models
 {
-    public class Cocktail
+    public class Cocktail 
     {
         public int Id { get; set; }
 
@@ -32,5 +35,6 @@ namespace CocktailCookbook.Models
        
         public string Photo { get; set; }
 
+      
     }
 }

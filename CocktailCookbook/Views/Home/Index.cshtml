@@ -1,4 +1,4 @@
-﻿@model IEnumerable<CocktailCookbook.Models.Job>
+﻿@model CocktailCookbook.ViewModels.HomePageViewModel
 
 @{
     ViewData["Title"] = "Home Page";
@@ -18,9 +18,9 @@
         </div>
     </nav>
     <div class="tab-content" id="nav-tabContent">
-        <div class="tab-pane fade show active" id="nav-cocktails" role="tabpanel" aria-labelledby="nav-cocktail-tab"><partial name="_CocktailCardPartial" model="ViewBag.Cocktails" /></div>
-        <div class="tab-pane fade" id="nav-pending" role="tabpanel" aria-labelledby="nav-pending-tab"><p>This is a list of current tasks. If a task has been marked in error, it can be found on the Jobs page</p><partial name="~/Views/Shared/JobPartials/_JobsPartial.cshtml" model="Model" /> </div>
-        <div class="tab-pane fade" id="nav-completed" role="tabpanel" aria-labelledby="nav-completed-tab">Completed Tasks can be found here<partial name="~/Views/Shared/JobPartials/_CompletedJobsPartial.cshtml" model="ViewBag.CompletedJobs" /></div>
+        <div class="tab-pane fade show active" id="nav-cocktails" role="tabpanel" aria-labelledby="nav-cocktail-tab"><partial name="_CocktailCardPartial" model="Model.Cocktails" /></div>
+        <div class="tab-pane fade" id="nav-pending" role="tabpanel" aria-labelledby="nav-pending-tab"><p>This is a list of current tasks. If a task has been marked in error, it can be found on the Jobs page</p><partial name="~/Views/Shared/JobPartials/_JobsPartial.cshtml" model="Model.Jobs" /> </div>
+        <div class="tab-pane fade" id="nav-completed" role="tabpanel" aria-labelledby="nav-completed-tab">Completed Tasks can be found here<partial name="~/Views/Shared/JobPartials/_CompletedJobsPartial.cshtml" model="Model.CompletedJobs" /></div>
 
     </div>
     <div>

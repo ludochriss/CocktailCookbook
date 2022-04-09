@@ -11,7 +11,7 @@ namespace CocktailCookbook.ViewModels
     public class JobsIndexViewModel
     {
         
-        public List<Job> PendingJobs { get; set; }
+        public List<Models.Task> PendingJobs { get; set; }
         public List<RecurringTask> HourlyJobs { get; set; }
 
         public List<RecurringTask> DailyJobs { get; set; }

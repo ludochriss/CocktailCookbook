@@ -12,6 +12,7 @@ using Newtonsoft.Json;
 using System.IO;
 using Microsoft.AspNetCore.Hosting;
 using CocktailCookbook.ViewModels;
+using Microsoft.AspNetCore.Http;
 
 namespace CocktailCookbook.Controllers
 {
@@ -93,7 +94,6 @@ namespace CocktailCookbook.Controllers
             }
             return View(cocktail);
         }
-
         // GET: Cocktails/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
@@ -101,48 +101,74 @@ namespace CocktailCookbook.Controllers
             {
                 return NotFound();
             }
-
             var cocktail = await _context.Cocktail.FindAsync(id);
+            var cocktailVm = new CreateCocktailViewModel
+            {
+                Id = cocktail.Id,
+                Name = cocktail.Name,
+                Method = cocktail.Method,
+                Ingredients = cocktail.Ingredients,
+                Glassware = cocktail.Glassware,
+                Description = cocktail.Garnish,
+                Creator = cocktail.Creator,
+                Photo = null
+            };
             if (cocktail == null)
             {
                 return NotFound();
             }
-            return View(cocktail);
+            return View(cocktailVm);
         }
-
         // POST: Cocktails/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Method,Glassware,Garnish,Description,Ingredients,Photo")] Cocktail cocktail)
+        //using create cocktail to minimise the need to create an extra view model to deal with the photo handling
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Method,Glassware,Garnish,Description,Ingredients,Photo")] CreateCocktailViewModel cocktailVm)
         {
-            if (id != cocktail.Id)
+            //check if the entity is valid
+            if (id != cocktailVm.Id)
             {
                 return NotFound();
             }
-
+            //PICKING UP THIS LATER CANNOT HAVE CONTEXT TRACK MULTIPLE OBJECTS
             if (ModelState.IsValid)
-            {
+                {
+                string uniqueFileName= UploadedFile(cocktailVm);
+                var cocktail = new Cocktail
+                    {
+                        Id = cocktailVm.Id,
+                        Name = cocktailVm.Name,
+                        Method = cocktailVm.Method,
+                        Description = cocktailVm.Description,
+                        Glassware = cocktailVm.Glassware,
+                        Ingredients = cocktailVm.Ingredients,
+                        Garnish = cocktailVm.Garnish,
+                        Creator = cocktailVm.Creator,
+                        Photo = uniqueFileName
+                    };
+
                 try
                 {
-                    _context.Update(cocktail);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!CocktailExists(cocktail.Id))
-                    {
-                        return NotFound();
+                        _context.Update(cocktail);
+                        await _context.SaveChangesAsync();
                     }
-                    else
+                    catch (DbUpdateConcurrencyException)
                     {
-                        throw;
+                        if (!CocktailExists(cocktailVm.Id))
+                        {
+                            return NotFound();
+                        }
+                        else
+                        {
+                            throw;
+                        }
                     }
+                    return RedirectToAction(nameof(Index));
                 }
-                return RedirectToAction(nameof(Index));
-            }
-            return View(cocktail);
+            
+            return View(cocktailVm);
         }
 
         // GET: Cocktails/Delete/5
@@ -199,21 +225,6 @@ namespace CocktailCookbook.Controllers
             }
             return uniqueFileName;
         }
-        //public string SaveFile(FileUpload fileObj)
-        //{
-        //    Cocktail cocktail = JsonConvert.DeserializeObject<Cocktail>(fileObj.Cocktail);
-        //    if (fileObj.File.Length > 0)
-        //    {
-        //        using (var ms = new MemoryStream())
-        //        {
-
-        //            fileObj.File.CopyTo(ms);
-        //            var fileBytes = ms.ToArray();
-        //            cocktail.Photo = fileBytes;
-
-        //        }
-        //    }
-        //    return "";
-        //}
+      
     }
 }

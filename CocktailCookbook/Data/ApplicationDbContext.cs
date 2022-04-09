@@ -27,7 +27,7 @@ namespace CocktailCookbook.Data
         public DbSet<CompletedJob> CompletedJobs { get; set; }
         public DbSet<RecurringTask> RecurringTasks { get; set; }
 
-        public DbSet<Job> Tasks { get; set; }
+        public DbSet<Task> Tasks { get; set; }
         public DbSet<Department> Departments { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)

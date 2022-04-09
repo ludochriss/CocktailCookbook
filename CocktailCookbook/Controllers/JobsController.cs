@@ -37,7 +37,7 @@ namespace CocktailCookbook.Controllers
             List<RecurringTask> hourly = new List<RecurringTask>();
             List<RecurringTask> daily = new List<RecurringTask>();
             List<RecurringTask> weekly = new List<RecurringTask>();
-            List<Job> pendingTasks = new List<Job>();
+            List<Models.Task> pendingTasks = new List<Models.Task>();
 
             foreach (var k in allJobs)
             {
@@ -48,12 +48,7 @@ namespace CocktailCookbook.Controllers
             }
             foreach (var job in j)
             {
-                if (job.RecursHourly == true)
-                {
-                    hourly.Add(job);
-                    
-                }
-                else if (job.RecursDaily == true)
+               if (job.RecursDaily == true)
                 {
                     daily.Add(job);
                    
@@ -121,7 +116,7 @@ namespace CocktailCookbook.Controllers
         public async Task<IActionResult> TaskManagement()
         {
             var jobs = await _context.Tasks.Include(t=>t.Department).ToListAsync();
-            List<Job> jobsList = new List<Job>();
+            List<Models.Task> jobsList = new List<Models.Task>();
             List<RecurringTask> recurringList = new List<RecurringTask>();
             foreach (var j in jobs)
             {
@@ -196,7 +191,7 @@ namespace CocktailCookbook.Controllers
             //checks model state
             if (ModelState.IsValid)
             {
-                var newJob = new Job
+                var newTask = new Models.Task
                 {
                     Id = job.Id,
                     Name = job.Name,
@@ -208,16 +203,16 @@ namespace CocktailCookbook.Controllers
                 };
                 if (parseSuccessful)
                 {
-                     newJob.Department = await _context.Departments.FirstOrDefaultAsync(d => d.Id == deptId);
+                     newTask.Department = await _context.Departments.FirstOrDefaultAsync(d => d.Id == deptId);
                 }
                 else
                 {
-                    newJob.Department = new Department
+                    newTask.Department = new Department
                     {
                         Name = "None"
                     };
                 }
-                _context.Add(newJob);
+                _context.Add(newTask);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
@@ -245,7 +240,7 @@ namespace CocktailCookbook.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,TimeCreated,TaskDescription")] Job job)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,TimeCreated,TaskDescription")] Models.Task job)
         {
             if (id != job.Id)
             {
@@ -330,7 +325,7 @@ namespace CocktailCookbook.Controllers
                 var existingJob = await _context.Tasks.Include(j=>j.Department).FirstOrDefaultAsync(t=>t.Id ==recurringJob.Id);
                 recurringJob.TimeCreated = DateTime.Now;
                 //Will need to get the daily time to be at session open
-                recurringJob.DailyTime = DateTime.Now;
+              
                 try
                 {                 
                         _context.Tasks.Remove(existingJob);
@@ -420,7 +415,7 @@ namespace CocktailCookbook.Controllers
 
         {
             var j = await _context.Tasks.FirstOrDefaultAsync(t => t.Id == id);
-            var nJ = new Job { 
+            var nJ = new Models.Task { 
                 Id = j.Id,
                 Name = j.Name,
                 TaskDescription = j.TaskDescription,

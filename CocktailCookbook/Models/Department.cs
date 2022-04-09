@@ -13,6 +13,10 @@ namespace CocktailCookbook.Models
 
         public string Name { get; set; }
 
+        public List<User> Staff { get; set; }
+
+        [Display(Name="Department Tasks")]
+        public List<Task> Tasks { get; set; }
 
     }
 }

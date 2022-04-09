@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace CocktailCookbook.Models
 {
-  
-    public  class Job
+
+    public class Task
     {
         public int Id { get; set; }
 
@@ -20,5 +20,12 @@ namespace CocktailCookbook.Models
         public Department Department { get; set; }
         public string TaskDescription { get; set; }
 
+        
+
     }
+  
 }
+
+
+
+

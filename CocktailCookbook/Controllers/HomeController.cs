@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using CocktailCookbook.Models;
 using CocktailCookbook.Data;
 using Microsoft.EntityFrameworkCore;
+using CocktailCookbook.ViewModels;
 
 namespace CocktailCookbook.Controllers
 {
@@ -31,16 +32,16 @@ namespace CocktailCookbook.Controllers
             var c = await _context.Cocktail.ToListAsync();
             var jobs = await _context.Tasks.Include(j=>j.Creator).ToListAsync();
             //TODO: retrieve job/completed job information in single database call 
-            List<Job> currentJobs = new List<Job>();
+            List<Models.Task> currentJobs = new List<Models.Task>();
             List<CompletedJob> completedJobs = new List<CompletedJob>();
             if (jobs.Count() > 0)
             {
-                //Object relational mapping in EFCore is not supporterd for inherited types, 
+                //Object relational mapping in EFCore 3.1 is not supporterd for inherited types, 
 
                 List<Cocktail> cocktails = new List<Cocktail>();
                 foreach (var j in jobs)
                 {
-
+                    
                     if (j.GetType() != typeof(CompletedJob))
                     {
                         currentJobs.Add(j);
@@ -51,15 +52,15 @@ namespace CocktailCookbook.Controllers
                     }
                 }
 
-            }
-         
-           
+            }      
+            var vm = new HomePageViewModel
+            {
+                Cocktails = c,
+                CompletedJobs = completedJobs,
+                Jobs = jobs
+            };
 
-            ViewBag.CompletedJobs = completedJobs as IEnumerable<CompletedJob>;
-            ViewBag.Cocktails = c as IEnumerable<Cocktail>;
-
-
-            return View(currentJobs);
+            return View(vm);
         }
 
         public IActionResult Privacy()
