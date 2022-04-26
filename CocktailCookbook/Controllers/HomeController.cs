@@ -29,26 +29,26 @@ namespace CocktailCookbook.Controllers
             //TODO: remove the ADD role button and develop an administration page that has all of the functions for role assignment and removal.
             //TODO: add the ability to store images for the cocktail cards.
 
-            var c = await _context.Cocktail.ToListAsync();
-            var jobs = await _context.Tasks.Include(j=>j.Creator).ToListAsync();
-            //TODO: retrieve job/completed job information in single database call 
-            List<Models.Task> currentJobs = new List<Models.Task>();
-            List<CompletedJob> completedJobs = new List<CompletedJob>();
-            if (jobs.Count() > 0)
+            var c = await _context.Cocktail.Include(c=>c.Glassware).ToListAsync();
+            var Tasks = await _context.Tasks.Include(j=>j.Creator).ToListAsync();
+            //TODO: retrieve Task/completed Task information in single database call 
+            List<Models.Task> currentTasks = new List<Models.Task>();
+            List<CompletedTask> completedTasks = new List<CompletedTask>();
+            if (Tasks.Count() > 0)
             {
                 //Object relational mapping in EFCore 3.1 is not supporterd for inherited types, 
 
                 List<Cocktail> cocktails = new List<Cocktail>();
-                foreach (var j in jobs)
+                foreach (var j in Tasks)
                 {
                     
-                    if (j.GetType() != typeof(CompletedJob))
+                    if (j.GetType() != typeof(CompletedTask))
                     {
-                        currentJobs.Add(j);
+                        currentTasks.Add(j);
                     }
                     else
                     {
-                        completedJobs.Add((CompletedJob)j);
+                        completedTasks.Add((CompletedTask)j);
                     }
                 }
 
@@ -56,8 +56,8 @@ namespace CocktailCookbook.Controllers
             var vm = new HomePageViewModel
             {
                 Cocktails = c,
-                CompletedJobs = completedJobs,
-                Jobs = jobs
+                CompletedTasks = completedTasks,
+                Tasks = Tasks
             };
 
             return View(vm);

@@ -1,4 +1,4 @@
-﻿@model IEnumerable<CocktailCookbook.Models.CompletedJob>
+﻿@model IEnumerable<CocktailCookbook.Models.CompletedTask>
 
 
 <table class="table table-striped">
@@ -40,12 +40,12 @@
             </td>
             <td>
                 
-                <a class="btn btn btn-info"asp-controller="Jobs" asp-action="Delete" asp-route-id="@item.Id">Delete</a> |
-                <a class="btn btn-warning" asp-action="MarkedInError" asp-controller="Jobs" asp-route-id="@item.Id">Marked In Error</a> 
+                <a class="btn cb-btn-primary"asp-controller="Tasks" asp-action="Delete" asp-route-id="@item.Id">Delete</a> 
+                <a class="btn cb-btn-primary" asp-action="MarkedInError" asp-controller="Tasks" asp-route-id="@item.Id">Marked In Error</a> 
 
                 @{ if (User.IsInRole("Manager"))
                         {
-                        <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                        <a class="btn cb-btn-primary" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
                     }}
             </td>
         </tr>

@@ -15,7 +15,7 @@ namespace CocktailCookbook.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.18")
+                .HasAnnotation("ProductVersion", "3.1.24")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -35,8 +35,8 @@ namespace CocktailCookbook.Migrations
                     b.Property<string>("Garnish")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Glassware")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int?>("GlasswareId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Ingredients")
                         .HasColumnType("nvarchar(max)");
@@ -53,6 +53,8 @@ namespace CocktailCookbook.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CreatorUserId");
+
+                    b.HasIndex("GlasswareId");
 
                     b.ToTable("Cocktail");
                 });
@@ -116,6 +118,24 @@ namespace CocktailCookbook.Migrations
                     b.ToTable("Departments");
                 });
 
+            modelBuilder.Entity("CocktailCookbook.Models.Glassware", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("ImagePath")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Glassware");
+                });
+
             modelBuilder.Entity("CocktailCookbook.Models.Ingredient", b =>
                 {
                     b.Property<int>("Id")
@@ -134,7 +154,35 @@ namespace CocktailCookbook.Migrations
                     b.ToTable("Ingredient");
                 });
 
-            modelBuilder.Entity("CocktailCookbook.Models.Job", b =>
+            modelBuilder.Entity("CocktailCookbook.Models.Post", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("AuthorUserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("TimeCreated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AuthorUserId");
+
+                    b.ToTable("Post");
+                });
+
+            modelBuilder.Entity("CocktailCookbook.Models.Task", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -168,35 +216,7 @@ namespace CocktailCookbook.Migrations
 
                     b.ToTable("Tasks");
 
-                    b.HasDiscriminator<string>("Discriminator").HasValue("Job");
-                });
-
-            modelBuilder.Entity("CocktailCookbook.Models.Post", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("AuthorUserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("Content")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("TimeCreated")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AuthorUserId");
-
-                    b.ToTable("Post");
+                    b.HasDiscriminator<string>("Discriminator").HasValue("Task");
                 });
 
             modelBuilder.Entity("CocktailCookbook.Models.User", b =>
@@ -466,9 +486,9 @@ namespace CocktailCookbook.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("CocktailCookbook.Models.CompletedJob", b =>
+            modelBuilder.Entity("CocktailCookbook.Models.CompletedTask", b =>
                 {
-                    b.HasBaseType("CocktailCookbook.Models.Job");
+                    b.HasBaseType("CocktailCookbook.Models.Task");
 
                     b.Property<string>("MarkedCompleteByUserId")
                         .HasColumnType("nvarchar(450)");
@@ -478,23 +498,14 @@ namespace CocktailCookbook.Migrations
 
                     b.HasIndex("MarkedCompleteByUserId");
 
-                    b.HasDiscriminator().HasValue("CompletedJob");
+                    b.HasDiscriminator().HasValue("CompletedTask");
                 });
 
             modelBuilder.Entity("CocktailCookbook.Models.RecurringTask", b =>
                 {
-                    b.HasBaseType("CocktailCookbook.Models.Job");
-
-                    b.Property<DateTime>("DailyTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<double>("HourlyFrequency")
-                        .HasColumnType("float");
+                    b.HasBaseType("CocktailCookbook.Models.Task");
 
                     b.Property<bool>("RecursDaily")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("RecursHourly")
                         .HasColumnType("bit");
 
                     b.Property<bool>("RecursWeekly")
@@ -508,6 +519,10 @@ namespace CocktailCookbook.Migrations
                     b.HasOne("CocktailCookbook.Models.User", "Creator")
                         .WithMany()
                         .HasForeignKey("CreatorUserId");
+
+                    b.HasOne("CocktailCookbook.Models.Glassware", "Glassware")
+                        .WithMany()
+                        .HasForeignKey("GlasswareId");
                 });
 
             modelBuilder.Entity("CocktailCookbook.Models.Comment", b =>
@@ -523,22 +538,22 @@ namespace CocktailCookbook.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("CocktailCookbook.Models.Job", b =>
+            modelBuilder.Entity("CocktailCookbook.Models.Post", b =>
+                {
+                    b.HasOne("CocktailCookbook.Models.User", "Author")
+                        .WithMany()
+                        .HasForeignKey("AuthorUserId");
+                });
+
+            modelBuilder.Entity("CocktailCookbook.Models.Task", b =>
                 {
                     b.HasOne("CocktailCookbook.Models.User", "Creator")
                         .WithMany()
                         .HasForeignKey("CreatorUserId");
 
                     b.HasOne("CocktailCookbook.Models.Department", "Department")
-                        .WithMany("Jobs")
+                        .WithMany("Tasks")
                         .HasForeignKey("DepartmentId");
-                });
-
-            modelBuilder.Entity("CocktailCookbook.Models.Post", b =>
-                {
-                    b.HasOne("CocktailCookbook.Models.User", "Author")
-                        .WithMany()
-                        .HasForeignKey("AuthorUserId");
                 });
 
             modelBuilder.Entity("CocktailCookbook.Models.User", b =>
@@ -610,7 +625,7 @@ namespace CocktailCookbook.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("CocktailCookbook.Models.CompletedJob", b =>
+            modelBuilder.Entity("CocktailCookbook.Models.CompletedTask", b =>
                 {
                     b.HasOne("CocktailCookbook.Models.User", "MarkedCompleteBy")
                         .WithMany()

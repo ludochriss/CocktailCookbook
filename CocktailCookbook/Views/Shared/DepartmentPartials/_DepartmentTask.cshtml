@@ -1,0 +1,23 @@
+﻿@model CocktailCookbook.Models.Task
+
+<table class="table">
+    <thead>
+        <tr>
+           
+            <th>@Html.DisplayFor(m=>m.Name)</th>
+           
+            <th>@Html.DisplayFor(m=>m.TaskDescription)</th>           
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            
+            <td>
+              @Model.Name
+            </td>
+            <td>@Model.TaskDescription</td>
+         
+        </tr>
+
+    </tbody>
+</table>

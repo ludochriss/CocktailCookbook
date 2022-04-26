@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace CocktailCookbook.Models
 {
    //to be implemented as Table per concrete class 
-    public class CompletedJob:Task
+    public class CompletedTask:Task
     {
         public DateTime TimeCompleted { get; set; }
 

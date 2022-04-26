@@ -52,18 +52,23 @@ namespace CocktailCookbook.Controllers
             {
                 return NotFound();
             }
-
-
-
-           
+                       
             return View(cocktail);
         }
 
         // GET: Cocktails/Create
         public IActionResult Create()
-        {
-            ViewBag.Ingredients =  _context.Ingredient.ToList();
-            return View();
+        {         
+            //after select list make pass the glassware names in
+            var vm = new CreateCocktailViewModel();
+            var glasses = _context.Glassware.ToList();
+
+            ViewBag.Glasses = new SelectList(glasses, "Id", "Name");
+       
+            
+
+          
+            return View(vm);
         }
 
         // POST: Cocktails/Create
@@ -71,23 +76,30 @@ namespace CocktailCookbook.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Method,Glassware,Garnish,Description,Ingredients,Photo")] CreateCocktailViewModel cocktail)
+        //glassware return string that represents id of current glassware object
+        public async Task<IActionResult> Create([Bind("Id,Name,Method,Garnish,Description,Ingredients,Glassware,Photo")] CreateCocktailViewModel cocktail)
         {
             if (ModelState.IsValid)
             {
-                string uniqueFileName = UploadedFile(cocktail);
+                //string uniqueFileName = UploadedFile(cocktail);
                 var newCocktail = new Cocktail
                 {
                     Id = cocktail.Id,
                     Ingredients = cocktail.Ingredients,
-                    Method = cocktail.Method,
-                    Glassware = cocktail.Glassware,
-                    Garnish = cocktail.Garnish,
+                    Method = cocktail.Method,                    
+                    Garnish = cocktail.Garnish, 
                     Creator = cocktail.Creator,
                     Description = cocktail.Description,
-                    Name = cocktail.Name,
-                    Photo = uniqueFileName
-                 };             
+                    Name = cocktail.Name                   
+                 };
+                if (cocktail.Glassware != null && Int32.TryParse(cocktail.Glassware, out int result)== true)
+                {
+                   newCocktail.Glassware = _context.Glassware.FirstOrDefault(g => g.Id ==result);
+                }
+                if (cocktail.Photo != null)
+                {
+                    newCocktail.Photo = newCocktail.ConvertImageToFilePath(cocktail.Photo, _webHostEnvironment);
+                }
                 _context.Add(newCocktail);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -102,21 +114,29 @@ namespace CocktailCookbook.Controllers
                 return NotFound();
             }
             var cocktail = await _context.Cocktail.FindAsync(id);
-            var cocktailVm = new CreateCocktailViewModel
+            var cocktailVm = new EditCocktailViewModel
             {
                 Id = cocktail.Id,
                 Name = cocktail.Name,
                 Method = cocktail.Method,
                 Ingredients = cocktail.Ingredients,
-                Glassware = cocktail.Glassware,
-                Description = cocktail.Garnish,
+                
+                Description = cocktail.Description,
                 Creator = cocktail.Creator,
-                Photo = null
+                Garnish = cocktail.Garnish,
+                ImagePath = cocktail.Photo,
+                Photo = null,
+                
             };
+           
+
             if (cocktail == null)
             {
                 return NotFound();
             }
+            var glasses = _context.Glassware.ToList();
+
+            ViewBag.Glasses = new SelectList(glasses, "Id", "Name");
             return View(cocktailVm);
         }
         // POST: Cocktails/Edit/5
@@ -125,30 +145,42 @@ namespace CocktailCookbook.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         //using create cocktail to minimise the need to create an extra view model to deal with the photo handling
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Method,Glassware,Garnish,Description,Ingredients,Photo")] CreateCocktailViewModel cocktailVm)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Method,Glassware,Garnish,Description,Ingredients,Photo,ImagePath")] EditCocktailViewModel cocktailVm)
         {
             //check if the entity is valid
             if (id != cocktailVm.Id)
             {
                 return NotFound();
             }
-            //PICKING UP THIS LATER CANNOT HAVE CONTEXT TRACK MULTIPLE OBJECTS
+            
             if (ModelState.IsValid)
                 {
-                string uniqueFileName= UploadedFile(cocktailVm);
+                //string uniqueFileName= UploadedFile(cocktailVm);
                 var cocktail = new Cocktail
                     {
                         Id = cocktailVm.Id,
                         Name = cocktailVm.Name,
                         Method = cocktailVm.Method,
-                        Description = cocktailVm.Description,
-                        Glassware = cocktailVm.Glassware,
+                        Description = cocktailVm.Description,                        
                         Ingredients = cocktailVm.Ingredients,
                         Garnish = cocktailVm.Garnish,
-                        Creator = cocktailVm.Creator,
-                        Photo = uniqueFileName
+                        Creator = cocktailVm.Creator
                     };
-
+                if (cocktailVm.Photo != null)
+                {
+                    string uniqueFileName = cocktail.ConvertImageToFilePath(cocktailVm.Photo, _webHostEnvironment);
+                    cocktail.Photo = uniqueFileName;
+                }
+                else if (cocktailVm.Photo == null)
+                {
+                    cocktail.Photo = cocktailVm.ImagePath;
+                }
+                
+              
+                if (cocktail.Glassware != null && Int32.TryParse(cocktailVm.Glassware, out int result) == true)
+                {
+                    cocktail.Glassware = _context.Glassware.FirstOrDefault(g => g.Id == result);
+                }
                 try
                 {
                         _context.Update(cocktail);

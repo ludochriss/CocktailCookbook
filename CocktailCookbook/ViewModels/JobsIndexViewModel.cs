@@ -8,17 +8,17 @@ using System.Threading.Tasks;
 namespace CocktailCookbook.ViewModels
 {
     
-    public class JobsIndexViewModel
+    public class TasksIndexViewModel
     {
         
-        public List<Models.Task> PendingJobs { get; set; }
-        public List<RecurringTask> HourlyJobs { get; set; }
+        public List<Models.Task> PendingTasks { get; set; }
+        public List<RecurringTask> HourlyTasks { get; set; }
 
-        public List<RecurringTask> DailyJobs { get; set; }
+        public List<RecurringTask> DailyTasks { get; set; }
 
-        public List<RecurringTask> WeeklyJobs { get; set; }
+        public List<RecurringTask> WeeklyTasks { get; set; }
 
-        public List<CompletedJob> CompletedJobs { get; set; }
+        public List<CompletedTask> CompletedTasks { get; set; }
 
     }
 }

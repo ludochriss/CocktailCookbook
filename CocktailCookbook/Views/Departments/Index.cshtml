@@ -1,0 +1,32 @@
+﻿@model IEnumerable<CocktailCookbook.Models.Department>
+
+@{
+    ViewData["Title"] = "Index";
+}
+<h1>Index</h1>
+
+<div>
+    @foreach (var dept in Model)
+    {
+        <div>
+            <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#@dept.Name" aria-expanded="false" aria-controls="@dept.Name">@dept.Name</button>
+        </div>
+    }
+
+    <div class="row">
+        @foreach (var dept in Model)
+        {
+            <div class="col">
+                <div class="collapse multi-collapse" id="@dept.Name">
+                    @foreach (var task in dept.Tasks)
+                    {
+                        <partial name="~/Views/Shared/DepartmentPartials/_DepartmentTask.cshtml" model="task" />
+                    }
+                </div>
+            </div>
+        }
+
+    </div>
+</div>
+  
+

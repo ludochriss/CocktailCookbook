@@ -8,24 +8,26 @@
     position: fixed;
     overflow-x: hidden;
 }
-.nav-link:hover {
+
+.cb-heading-sidebar{
     color: #183a1d;
+    text-decoration:none;
+    font-family: 'Brush Script MT';
+}
+    .cb-heading-sidebar:hover {
+        text-decoration: none;
+        color: #f0a04b;
+    }
+/*side bar styling is cb-nav-link*/
+.cb-nav-link:hover {
+    color: #183a1d;
+    text-decoration: none;
+    background-color:#f6c453;
 }
 
 
 
-
-.cb-nav-link {
-    display: block;
-    padding: 0.5rem 1rem;
-    border: 1px solid transparent;
-    border-top-left-radius: 0.25rem;
-    border-top-right-radius: 0.25rem;
-    background-color: #e1eedd;
-    border-radius: 0.25rem;
-}
-
-.nav-link:focus {
+.cb-nav-link:focus {
     text-decoration: blink;
     text-decoration-color: #f63453;
     border-color: #e9ecef #e9ecef #dee2e6;
@@ -36,6 +38,12 @@
     background-color: #fff;
     border-color: #dee2e6 #dee2e6 #fff;
     /*color: greenyellow*/
+}
+.sidebar-button-primary {
+    border-style: ridge;
+    border-radius: 5px;   
+    border-color: #183a1d;
+    border-width: 1px;
 }
 
 #content {
@@ -49,7 +57,157 @@
   
  
 }
+
+
+
+/*Body background*/
 body {
     background-color: #fefbe9;
+    
+}
+.backgroundColor {
+    background-color: #fefbe9;
+}
+/*Navigation styles*/
+.cb-nav-link {
+    display: block;
+    padding: 0.5rem 1rem;
+    border: 1px solid transparent;
+    border-top-left-radius: 0.25rem;
+    border-top-right-radius: 0.25rem;
+    background-color: #fefbe9;
+    border-radius: 0.25rem;
+    text-decoration: none;
+    color: #183a1d;
+}
+
+.cb-nav-tab{
+    background-color:#fefbe9;
+    color:#183a1d;
+}
+.cb-nav-tab:hover {
+    background-color: #f6c453;
+    color: #183a1d;
+}
+.cb-nav-tab.active{
+    background-color: #f63453;
+}
+
+/*Hamburger style*/
+
+#navToggle {
+    background-color: #fefbe9;
+    color: #183a1d;
+    border:solid;
+    border-width : 1px;
+}
+#navToggle:hover{
+    background-color: #f6c453;
+    color: #fefbe9;
+}
+
+.cb-btn-primary{
+    justify-content:center;
+    background-color: #fefbe9;
+    border:solid;
+    border-width: 1px;
+    border-color:#183a1d;
+    padding:10px;
+}
+
+
+.cb-btn-secondary {
+    justify-content: center;
+    background-color: #e1eedd;
+    border: solid;
+    border-width: 1px;
+    border-color: #183a1d;
+    margin-right:3px;
+    padding: 7px;
+}
+.cb-btn-primary:hover {
+    background-color: #f6c453;
+    color:#fefbe9;
+}
+.cb-btn-secondary:hover {
+    background-color: #f6c453;
+    color: #fefbe9;
+
+}
+.pageHeader{
+    background-color:#fefbe9
+}
+/*Cocktail Card Styles*/
+.cocktailCardBody {
+    background-color: #e1eedd;
+    justify-content:space-around;
+}
+.cb-card-title{
+    text-align:center;
+    font-size:25px;
+    font-family: Calibri;
+
+}
+.cocktailCard {
+    border: solid;
+    border-width: 1px;
+    border-color: #183a1d;
+}
+
+
+/*Fuck around with label for opera kitchen*/
+.cb-bar {
+    position: relative;
+    display: inline-block;
+    color: black;
+}
+
+.cb-kitchen {
+    position: relative;
+    display: inline-block;
+    color: black;
+    transform: rotate(-15deg);
+    font-weight: bold
+}
+
+.cb-kitchen {
+    content: "Kitchen";
+    font-size: 40px;
+    left: -117px;
+    font-style: italic;
+    font-family: Algerian;
+}
+
+sup {
+    font-size: 20px;
+}
+
+.cb-book {
+    position: relative;
+    left: -130px;
+}
+div.row{
+    background-color:rgba(255,0,0,0);
+}
+.cb-bar:after,
+.cb-bar:before {
+    position: absolute;
+    content: '';
+    top: 50%;
+    left: 0;
+    width: 100%;
+    height: 5px;
+    background: #f0a04b;
+    ;
+    font-size: 20px;
+    color: black;
+}
+
+.cb-bar:before {
+    transform: rotate(20deg);
+}
+
+.cb-bar:after {
+    transform: rotate(-20deg);
 }
 

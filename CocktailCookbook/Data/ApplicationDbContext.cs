@@ -24,7 +24,7 @@ namespace CocktailCookbook.Data
         public DbSet<CocktailCookbook.Models.Cocktail> Cocktail { get; set; }
         public DbSet<CocktailCookbook.Models.CocktailIngredient> CocktailIngredient { get; set; }
         public DbSet<CocktailCookbook.Models.Ingredient> Ingredient { get; set; }
-        public DbSet<CompletedJob> CompletedJobs { get; set; }
+        public DbSet<CompletedTask> CompletedTasks { get; set; }
         public DbSet<RecurringTask> RecurringTasks { get; set; }
 
         public DbSet<Task> Tasks { get; set; }
@@ -38,13 +38,17 @@ namespace CocktailCookbook.Data
 
 
 
-            //builder.Entity<CompletedJob>().ToTable("CompletedJob");
-            //builder.Entity<Job>().ToTable("Job");
-            //attempting to model the jobs inheritance tree
+            //builder.Entity<CompletedTask>().ToTable("CompletedTask");
+            //builder.Entity<Task>().ToTable("Task");
+            //attempting to model the Tasks inheritance tree
 
         }
 
         public DbSet<CocktailCookbook.ViewModels.MakeRecurringViewModel> MakeRecurringViewModel { get; set; }
+
+        public DbSet<CocktailCookbook.Models.Glassware> Glassware { get; set; }
+
+        public DbSet<CocktailCookbook.Models.Premix> Premix { get; set; }
        
     }
 }

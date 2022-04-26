@@ -1,0 +1,43 @@
+﻿@model CocktailCookbook.Models.Cocktail
+
+@{
+    string id = Model.Name.Replace(" ", "-");
+    string info = id + "info";
+    string action = id + "action";
+    string imgPath = Model.Photo;
+}
+
+
+<div class="card cocktailCard d-sm-inline-flex d-lg-inline-flex col-lg-2 px-0" style="width: 18rem;">
+    <img src="~/Images/@imgPath" class="card-img-top" alt="...">
+    <div class="card-body cocktailCardBody">
+        <h5 class="cb-card-title">  @Html.DisplayFor(modelItem => Model.Name)</h5>
+    </div>
+
+
+
+
+    <button class="btn cb-btn-primary" id="@id" data-toggle="collapse" data-target="#@info" aria-expanded="false" aria-controls="@info">Info</button>
+    <button class="btn cb-btn-primary" type="button" data-toggle="collapse" data-target="#@action" aria-expanded="false" aria-controls="@action">Action</button>
+
+    
+
+
+        <div class="row collapse card card-body p-0 m-0" id="@info">
+            <ul class="list-group list-group-flush px-0">
+                <li class="list-group-item"><h5>@Html.DisplayNameFor(m => Model.Glassware) : </h5>@Html.DisplayFor(modelItem => Model.Glassware.Name)</li>
+                <li class="list-group-item"><h6>@Html.DisplayNameFor(m => Model.Ingredients) : </h6>@Html.DisplayFor(modelItem => Model.Ingredients)</li>
+                <li class="list-group-item"><h6>@Html.DisplayNameFor(m => Model.Method) : </h6>@Html.DisplayFor(modelItem => Model.Method)</li>
+                <li class="list-group-item"><h6>@Html.DisplayNameFor(m => Model.Garnish) : </h6>@Html.DisplayFor(modelItem => Model.Garnish)</li>
+                <li class="list-group-item"><h6>@Html.DisplayNameFor(m => Model.Description) : </h6>@Html.DisplayFor(modelItem => Model.Description)</li>
+            </ul>
+        </div>
+
+        <div class="row collapse card card-body p-0 m-0" id="@action">
+            <a class="btn cb-btn-secondary  " asp-action="Edit" asp-controller="Cocktails" asp-route-id="@Model.Id">Edit</a>
+            <a class="btn cb-btn-secondary " asp-action="Details" asp-controller="Cocktails" asp-route-id="@Model.Id">Details</a>
+            <a class="btn cb-btn-secondary " asp-action="Delete" asp-controller="Cocktails" asp-route-id="@Model.Id">Delete</a>
+        </div>
+
+    
+</div>

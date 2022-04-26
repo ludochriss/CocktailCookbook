@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CocktailCookbook.ViewModels
 {
-    public class CreateJobViewModel
+    public class CreateTaskViewModel
     {
         public int Id { get; set; }
 

@@ -1,4 +1,5 @@
 ﻿using CocktailCookbook.Data;
+using CocktailCookbook.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -8,19 +9,19 @@ using System.Threading.Tasks;
 
 namespace CocktailCookbook.Controllers
 {
-    public class DepartmentController : Controller
+    public class DepartmentsController : Controller
     {
         private readonly ApplicationDbContext _dbContext;
-        public DepartmentController(ApplicationDbContext dbContext)
+        public DepartmentsController(ApplicationDbContext dbContext)
         {
             _dbContext = dbContext;
         }
         public IActionResult Index()
         {
-            _dbContext.Departments
+           var dept = _dbContext.Departments
                 .Include(t => t.Tasks)
                 .ToList();
-            return View();
+            return View(dept);
         }
     }
 }

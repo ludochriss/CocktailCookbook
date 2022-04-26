@@ -3,11 +3,11 @@
 @{
     ViewData["Title"] = "Index";
 }
-<header class="popover-header"><h2 class="font-weight-light">Posts</h2></header>
+<header class="popover-header pageHeader"><h2 class="font-weight-light">Posts</h2></header>
 
 
 <p>
-    <a class="btn-dark btn" asp-action="Create">New Thread</a>
+    <a class="cb-btn-primary btn" asp-action="Create">New Thread</a>
 </p>
 <table class="table  p-3 m-4" >
     <thead>
@@ -34,17 +34,27 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Title)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Content)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TimeCreated)
-            </td>
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                @if (item.Content.Length > 50)
+                {
+                    string temp = item.Content.Substring(0, 50);
+                    <td>temp</td>
+                }
+                else
+                {
+                    <td>
+
+                        @Html.DisplayFor(modelItem => item.Content)
+                    </td>
+                }
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.TimeCreated)
+                </td>
             <td>
                 @*make the number of comments a number and if the number is greater than 0 be able to click on it and navigate to the necessary*@
-                <a class="btn btn-primary" asp-action="ViewThread" asp-route-id="@item.Id">Comments</a>
+                <a class="btn cb-btn-primary" asp-action="ViewThread" asp-route-id="@item.Id">Comments</a>
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Author.NickName)
@@ -52,12 +62,12 @@
             <td class="justify-content-around">
                 @if (true)
                 {
-                    <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                    <a class="btn btn-warning" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                    <a class="btn cb-btn-primary" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    <a class="btn cb-btn-primary" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
 
                 }
-                <a class="btn btn-info" asp-action="Details" asp-route-id="@item.Id">Details</a>
-                <a class="btn btn-success" asp-action="Reply" asp-route-id="@item.Id">Reply</a>
+                <a class="btn cb-btn-primary" asp-action="Details" asp-route-id="@item.Id">Details</a>
+                <a class="btn cb-btn-primary" asp-action="Reply" asp-route-id="@item.Id">Reply</a>
             </td>
         </tr>
 }   

@@ -1,4 +1,4 @@
-﻿@model IEnumerable<CocktailCookbook.Models.Job>
+﻿@model IEnumerable<CocktailCookbook.Models.Task>
 
 
 
@@ -42,11 +42,11 @@
                     <td>@Html.DisplayFor(modelItem => item.Creator.NickName)</td>
                     <td>@Html.DisplayFor(modelItem => item.Department.Name)</td>
                     <td>
-                        <a class="btn btn-success" asp-action="MarkComplete" asp-controller="Jobs" asp-route-id="@item.Id">Mark Complete</a>
-                        <a class="btn btn-info" asp-action="Details" asp-controller="Jobs" asp-route-id="@item.Id">Details</a>
+                        <a class="btn btn-success" asp-action="MarkComplete" asp-controller="Tasks" asp-route-id="@item.Id">Mark Complete</a>
+                        <a class="btn btn-info" asp-action="Details" asp-controller="Tasks" asp-route-id="@item.Id">Details</a>
                         @{if (User.IsInRole("Manager"))
                             {
-                                <a class="btn btn-danger" asp-action="Delete" asp-controller="Jobs" asp-route-id="@item.Id">Delete</a>
+                                <a class="btn btn-danger" asp-action="Delete" asp-controller="Tasks" asp-route-id="@item.Id">Delete</a>
                             }
                         }
 
@@ -61,7 +61,7 @@
     }
 
 
-    else { <p>No current Jobs to Display</p>
+    else { <p>No current Tasks to Display</p>
 
     }
 }

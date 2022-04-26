@@ -13,68 +13,68 @@ using CocktailCookbook.ViewModels;
 
 namespace CocktailCookbook.Controllers
 {
-    public class JobsController : Controller
+    public class TasksController : Controller
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<IdentityUser> _um;
         private readonly SignInManager<IdentityUser> _sm;
-        public JobsController(ApplicationDbContext context, UserManager<IdentityUser> um, SignInManager<IdentityUser> sm)
+        public TasksController(ApplicationDbContext context, UserManager<IdentityUser> um, SignInManager<IdentityUser> sm)
         {
             _context = context;
             _um = um;
             _sm = sm;
         }
 
-        // GET: Jobs
+        // GET: Tasks
 
-        //Jobs controller is currently under construction and will be finished soon.
+        //Tasks controller is currently under construction and will be finished soon.
 
         //TASKS CAN BE CREATED HOWEVER RECURRING TASKS CANNOT BE SET YET.
         public async Task<IActionResult> Index()
         {
-            var allJobs = await _context.Tasks.Include(t=>t.Department).Include(t=>t.Department).ToListAsync();
-            var j = allJobs.OfType<RecurringTask>().ToList();
+            var allTasks = await _context.Tasks.Include(t=>t.Department).Include(t=>t.Department).ToListAsync();
+            var j = allTasks.OfType<RecurringTask>().ToList();
             List<RecurringTask> hourly = new List<RecurringTask>();
             List<RecurringTask> daily = new List<RecurringTask>();
             List<RecurringTask> weekly = new List<RecurringTask>();
             List<Models.Task> pendingTasks = new List<Models.Task>();
 
-            foreach (var k in allJobs)
+            foreach (var k in allTasks)
             {
-                if (k.GetType() !=typeof(CompletedJob))
+                if (k.GetType() !=typeof(CompletedTask))
                 {
                     pendingTasks.Add(k);
                 }
             }
-            foreach (var job in j)
+            foreach (var Task in j)
             {
-               if (job.RecursDaily == true)
+               if (Task.RecursDaily == true)
                 {
-                    daily.Add(job);
+                    daily.Add(Task);
                    
                 }
-                else if (job.RecursWeekly == true)
+                else if (Task.RecursWeekly == true)
                 {
-                    weekly.Add(job);
+                    weekly.Add(Task);
                 }
             
             }
             
 
-            List<CompletedJob> compJobs = await _context.Tasks.OfType<CompletedJob>().ToListAsync();
-            var vm = new JobsIndexViewModel
+            List<CompletedTask> compTasks = await _context.Tasks.OfType<CompletedTask>().ToListAsync();
+            var vm = new TasksIndexViewModel
             {
-                DailyJobs = daily,
-                HourlyJobs = hourly,
-                WeeklyJobs = weekly,
-                CompletedJobs = compJobs,
-                PendingJobs = pendingTasks
+                DailyTasks = daily,
+                HourlyTasks = hourly,
+                WeeklyTasks = weekly,
+                CompletedTasks = compTasks,
+                PendingTasks = pendingTasks
             };
 
             return View(vm);
         }              
 
-        // GET: Jobs/Details/5
+        // GET: Tasks/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -82,15 +82,15 @@ namespace CocktailCookbook.Controllers
                 return NotFound();
             }
 
-            var job = await _context.Tasks
+            var Task = await _context.Tasks
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (job == null)
+            if (Task == null)
             {
                 return NotFound();
             }
-            return View(job);
+            return View(Task);
         }
-        // GET: Jobs/Create
+        // GET: Tasks/Create
         public async Task<IActionResult> Create()
         {           
            //create dropdown list of departments
@@ -115,14 +115,14 @@ namespace CocktailCookbook.Controllers
         [HttpGet]
         public async Task<IActionResult> TaskManagement()
         {
-            var jobs = await _context.Tasks.Include(t=>t.Department).ToListAsync();
-            List<Models.Task> jobsList = new List<Models.Task>();
+            var Tasks = await _context.Tasks.Include(t=>t.Department).ToListAsync();
+            List<Models.Task> TasksList = new List<Models.Task>();
             List<RecurringTask> recurringList = new List<RecurringTask>();
-            foreach (var j in jobs)
+            foreach (var j in Tasks)
             {
                 if (j.GetType() != typeof(RecurringTask))
                 {
-                    jobsList.Add(j);
+                    TasksList.Add(j);
                 }
                 else
                 {
@@ -131,7 +131,7 @@ namespace CocktailCookbook.Controllers
             }
 
             var vm = new TaskManagementViewModel();
-            vm.Jobs = jobsList;
+            vm.Tasks = TasksList;
             vm.RecurringTasks = recurringList;
            
             return View(vm);
@@ -162,30 +162,30 @@ namespace CocktailCookbook.Controllers
             return hourlyFrequency;
         }
             
-        // POST: Jobs/Create
+        // POST: Tasks/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Department,Name,TaskDescription")] CreateJobViewModel job)
+        public async Task<IActionResult> Create([Bind("Id,Department,Name,TaskDescription")] CreateTaskViewModel Task)
         {
 
             //Refactor required to database schema at this point will need to add an interface to manage user information as 
             //neglected to manage the user using the in-built user management services
             
-            bool parseSuccessful = int.TryParse(job.Department, out  int deptId);           
-            //int deptId = Convert.ToInt32(job.Department);
+            bool parseSuccessful = int.TryParse(Task.Department, out  int deptId);           
+            //int deptId = Convert.ToInt32(Task.Department);
             var user = await _um.GetUserAsync(User);       
                        
             //checks if signed in for naming 
             if (_sm.IsSignedIn(User))
             {
-                job.Creator = await _context.Staff.FirstOrDefaultAsync(u => u.UserId == user.Id);
+                Task.Creator = await _context.Staff.FirstOrDefaultAsync(u => u.UserId == user.Id);
             }
             //if user is not signed in, gives unknown user, shouldn't get this far without it anyway, but just incase
             else
             {
-                job.Creator = new User { NickName = "Unknown User", Email = "Unknown User" };
+                Task.Creator = new User { NickName = "Unknown User", Email = "Unknown User" };
             }
         
             //checks model state
@@ -193,11 +193,11 @@ namespace CocktailCookbook.Controllers
             {
                 var newTask = new Models.Task
                 {
-                    Id = job.Id,
-                    Name = job.Name,
+                    Id = Task.Id,
+                    Name = Task.Name,
                     
-                    TaskDescription = job.TaskDescription,
-                    Creator = job.Creator,
+                    TaskDescription = Task.TaskDescription,
+                    Creator = Task.Creator,
                     TimeCreated = DateTime.Now
                    
                 };
@@ -216,10 +216,10 @@ namespace CocktailCookbook.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(job);
+            return View(Task);
         }
 
-        // GET: Jobs/Edit/5
+        // GET: Tasks/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -227,40 +227,40 @@ namespace CocktailCookbook.Controllers
                 return NotFound();
             }
 
-            var job = await _context.Tasks.FindAsync(id);
-            if (job == null)
+            var Task = await _context.Tasks.FindAsync(id);
+            if (Task == null)
             {
                 return NotFound();
             }
-            return View(job);
+            return View(Task);
         }
 
-        // POST: Jobs/Edit/5
+        // POST: Tasks/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,TimeCreated,TaskDescription")] Models.Task job)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,TimeCreated,TaskDescription")] Models.Task Task)
         {
-            if (id != job.Id)
+            if (id != Task.Id)
             {
                 return NotFound();
             }
             //find the current users id
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             //match with database 
-            job.Creator =await _context.Staff.FirstOrDefaultAsync(s => s.UserId == userId);
+            Task.Creator =await _context.Staff.FirstOrDefaultAsync(s => s.UserId == userId);
 
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(job);
+                    _context.Update(Task);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!JobExists(job.Id))
+                    if (!TaskExists(Task.Id))
                     {
                         return NotFound();
                     }
@@ -271,40 +271,40 @@ namespace CocktailCookbook.Controllers
                 }
                 return RedirectToAction(nameof(Index),"Home");
             }
-            return View(job);
+            return View(Task);
         }
 
-        //gets recurring job page.
+        //gets recurring Task page.
         [HttpGet]
-        public async Task<IActionResult> MakeRecurringJob(int? id)
+        public async Task<IActionResult> MakeRecurringTask(int? id)
         {
             //refactor this code to get all information in a single call, needs to be condensed.
             if (id == null)
             {
                 return NotFound();
             }
-            //bring the department that the job is assigned to
-            var job = await _context.Tasks.Include(d=>d.Department).FirstOrDefaultAsync(t=>t.Id == id);
-            if (job == null)
+            //bring the department that the Task is assigned to
+            var Task = await _context.Tasks.Include(d=>d.Department).FirstOrDefaultAsync(t=>t.Id == id);
+            if (Task == null)
             {
                 return NotFound();
             }
             var hourList = GetHourlyFrequencyList();
             ViewBag.HourList = hourList;
 
-            var newJob = new MakeRecurringViewModel
+            var newTask = new MakeRecurringViewModel
             {
-                Id = job.Id,
-                Name = job.Name,
-                TaskDescription = job.TaskDescription,
-                Department = job.Department,
-                Creator = job.Creator
+                Id = Task.Id,
+                Name = Task.Name,
+                TaskDescription = Task.TaskDescription,
+                Department = Task.Department,
+                Creator = Task.Creator
                 
               
                 
 
             };
-            return View(newJob);
+            return View(newTask);
 
            
         }
@@ -312,8 +312,8 @@ namespace CocktailCookbook.Controllers
         //method not finished
 
         [HttpPost]
-        public async Task<IActionResult> MakeRecurringJob(int? id, [Bind("Id,Name,TaskDescription,RecursDaily,DailyTime,RecursHourly,RecursWeekly,HourlyFrequency,Creator")]
-        RecurringTask recurringJob)
+        public async Task<IActionResult> MakeRecurringTask(int? id, [Bind("Id,Name,TaskDescription,RecursDaily,DailyTime,RecursHourly,RecursWeekly,HourlyFrequency,Creator")]
+        RecurringTask recurringTask)
         {
             if (id == null)
             {
@@ -322,19 +322,19 @@ namespace CocktailCookbook.Controllers
            
             if (ModelState.IsValid)
             {
-                var existingJob = await _context.Tasks.Include(j=>j.Department).FirstOrDefaultAsync(t=>t.Id ==recurringJob.Id);
-                recurringJob.TimeCreated = DateTime.Now;
+                var existingTask = await _context.Tasks.Include(j=>j.Department).FirstOrDefaultAsync(t=>t.Id ==recurringTask.Id);
+                recurringTask.TimeCreated = DateTime.Now;
                 //Will need to get the daily time to be at session open
               
                 try
                 {                 
-                        _context.Tasks.Remove(existingJob);
-                        _context.RecurringTasks.Add(recurringJob);
+                        _context.Tasks.Remove(existingTask);
+                        _context.RecurringTasks.Add(recurringTask);
                         await _context.SaveChangesAsync();                    
                   }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!JobExists(recurringJob.Id))
+                    if (!TaskExists(recurringTask.Id))
                     {
                         return NotFound();
                     }
@@ -343,15 +343,15 @@ namespace CocktailCookbook.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(TaskManagement), "Jobs");
+                return RedirectToAction(nameof(TaskManagement), "Tasks");
 
             }
-            return View(recurringJob);
+            return View(recurringTask);
         }
 
  
 
-            // GET: Jobs/Delete/5
+            // GET: Tasks/Delete/5
             public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -359,23 +359,23 @@ namespace CocktailCookbook.Controllers
                 return NotFound();
             }
 
-            var job = await _context.Tasks
+            var Task = await _context.Tasks
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (job == null)
+            if (Task == null)
             {
                 return NotFound();
             }
 
-            return View(job);
+            return View(Task);
         }
 
-        // POST: Jobs/Delete/5
+        // POST: Tasks/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var job = await _context.Tasks.FindAsync(id);
-            _context.Tasks.Remove(job);
+            var Task = await _context.Tasks.FindAsync(id);
+            _context.Tasks.Remove(Task);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
@@ -385,12 +385,12 @@ namespace CocktailCookbook.Controllers
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);                  
             var j = await _context.Tasks.FirstOrDefaultAsync(j => j.Id == id);
 
-            //add the completed job to the database and remove the task from the tasks list, save changes.
+            //add the completed Task to the database and remove the task from the tasks list, save changes.
 
             //search database for the staff members details
             var markedCompleteBy = await _context.Staff.FirstOrDefaultAsync(s => s.UserId == userId);
-            //draft new completed job, inherits from job
-            var c = new CompletedJob
+            //draft new completed Task, inherits from Task
+            var c = new CompletedTask
             {
                 Id = j.Id,
                 TaskDescription = j.TaskDescription,
@@ -402,7 +402,7 @@ namespace CocktailCookbook.Controllers
 
             };
             _context.Tasks.Remove(j);
-            _context.CompletedJobs.Add(c);
+            _context.CompletedTasks.Add(c);
          
             await _context.SaveChangesAsync();
 
@@ -410,7 +410,7 @@ namespace CocktailCookbook.Controllers
             return RedirectToAction(nameof(Index), "Home");
         }
 
-        //returns completed job to incomplete state.
+        //returns completed Task to incomplete state.
         public async Task<IActionResult> MarkedInError(int id)
 
         {
@@ -432,7 +432,7 @@ namespace CocktailCookbook.Controllers
         }
  
 
-        private bool JobExists(int id)
+        private bool TaskExists(int id)
         {
             return _context.Tasks.Any(e => e.Id == id);
         }

@@ -1,14 +1,13 @@
-﻿@model CocktailCookbook.Models.Job
+﻿@model CocktailCookbook.Models.Glassware
 
 @{
     ViewData["Title"] = "Details";
-    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <h1>Details</h1>
 
 <div>
-    <h4>Job</h4>
+    <h4>Glassware</h4>
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
@@ -18,16 +17,10 @@
             @Html.DisplayFor(model => model.Name)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.TimeCreated)
+            @Html.DisplayNameFor(model => model.ImagePath)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.TimeCreated)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.TaskDescription)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.TaskDescription)
+            @Html.DisplayFor(model => model.ImagePath)
         </dd>
     </dl>
 </div>

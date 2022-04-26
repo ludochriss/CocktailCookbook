@@ -1,11 +1,10 @@
 ﻿using CocktailCookbook.Models;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Threading.Tasks;
+
 
 namespace CocktailCookbook.ViewModels
 {
@@ -22,9 +21,11 @@ namespace CocktailCookbook.ViewModels
         [Display(Name = "Ingredients")]
         [Required]
         public string Ingredients { get; set; }
-        [Required]
+        
+        [Display(Name ="Select Glassware")]
         public string Glassware { get; set; }
 
+       
         public string Description { get; set; }
         
         public string Garnish { get; set; }
@@ -35,5 +36,31 @@ namespace CocktailCookbook.ViewModels
         
         public IFormFile Photo { get; set; }
 
+        public List<SelectListItem> PopulateGlasswareSelectList(List<Glassware> glasses)
+        {
+
+           var  selectList = new List<SelectListItem>();
+            if (glasses.Count > 0)
+            {
+                foreach (var glass in glasses)
+                {
+                    selectList.Add(new SelectListItem
+                    {
+                        Value = glass.Id.ToString(),
+                        Text = glass.Name
+                    });
+                }
+                return selectList;
+            }
+            else
+            {
+                selectList.Add(new SelectListItem
+                {
+                    Value = "0",
+                    Text = "Please create glassware first"
+                });
+                return selectList;
+            }
+        }
     }
 }

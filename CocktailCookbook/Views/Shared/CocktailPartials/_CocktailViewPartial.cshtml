@@ -1,0 +1,17 @@
+﻿@model IEnumerable<CocktailCookbook.Models.Cocktail>
+
+<p>
+    <a class="btn cb-btn-primary"asp-action="Create" asp-controller="Cocktails">Create New</a>
+</p>
+
+<body class="flex justify-content-around">
+
+    @foreach (var item in Model)
+    {
+       <partial name="~/Views/Shared/CocktailPartials/_CocktailCard.cshtml" model = "item"/>
+    }
+
+</body>
+    
+
+

@@ -23,11 +23,16 @@
                 <textarea asp-for="Method" class="form-control" placeholder="Type the method here"></textarea>
                 <span asp-validation-for="Method" class="text-danger"></span>
             </div>
+
             <div class="form-group">
                 <label asp-for="Glassware" class="control-label"></label>
-                <input asp-for="Glassware" class="form-control" />
-                <span asp-validation-for="Glassware" class="text-danger"></span>
-            </div>
+                <br />
+            <select asp-for="Glassware" asp-items="ViewBag.Glasses" class="custom-select"></select>
+             @*@Html.DropDownList("Glasses", "Select Glassware")*@
+
+            <span asp-validation-for="Glassware" class="text-danger"></span>
+             </div>
+           
             <div class="form-group">
                 <label asp-for="Garnish" class="control-label"></label>
                 <input asp-for="Garnish" class="form-control" />

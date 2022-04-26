@@ -136,7 +136,7 @@ namespace CocktailCookbook.Migrations
                     b.ToTable("Ingredient");
                 });
 
-            modelBuilder.Entity("CocktailCookbook.Models.Job", b =>
+            modelBuilder.Entity("CocktailCookbook.Models.Task", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -170,7 +170,7 @@ namespace CocktailCookbook.Migrations
 
                     b.ToTable("Tasks");
 
-                    b.HasDiscriminator<string>("Discriminator").HasValue("Job");
+                    b.HasDiscriminator<string>("Discriminator").HasValue("Task");
                 });
 
             modelBuilder.Entity("CocktailCookbook.Models.Post", b =>
@@ -463,9 +463,9 @@ namespace CocktailCookbook.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("CocktailCookbook.Models.CompletedJob", b =>
+            modelBuilder.Entity("CocktailCookbook.Models.CompletedTask", b =>
                 {
-                    b.HasBaseType("CocktailCookbook.Models.Job");
+                    b.HasBaseType("CocktailCookbook.Models.Task");
 
                     b.Property<string>("MarkedCompleteByUserId")
                         .HasColumnType("nvarchar(450)");
@@ -475,12 +475,12 @@ namespace CocktailCookbook.Migrations
 
                     b.HasIndex("MarkedCompleteByUserId");
 
-                    b.HasDiscriminator().HasValue("CompletedJob");
+                    b.HasDiscriminator().HasValue("CompletedTask");
                 });
 
             modelBuilder.Entity("CocktailCookbook.Models.RecurringTask", b =>
                 {
-                    b.HasBaseType("CocktailCookbook.Models.Job");
+                    b.HasBaseType("CocktailCookbook.Models.Task");
 
                     b.Property<DateTime>("DailyTime")
                         .HasColumnType("datetime2");
@@ -520,7 +520,7 @@ namespace CocktailCookbook.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("CocktailCookbook.Models.Job", b =>
+            modelBuilder.Entity("CocktailCookbook.Models.Task", b =>
                 {
                     b.HasOne("CocktailCookbook.Models.User", "Creator")
                         .WithMany()
@@ -600,7 +600,7 @@ namespace CocktailCookbook.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("CocktailCookbook.Models.CompletedJob", b =>
+            modelBuilder.Entity("CocktailCookbook.Models.CompletedTask", b =>
                 {
                     b.HasOne("CocktailCookbook.Models.User", "MarkedCompleteBy")
                         .WithMany()

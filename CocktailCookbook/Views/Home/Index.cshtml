@@ -6,21 +6,27 @@
 <div class="contentContainer">
     
     <div class="text-center">
-        <h1 class="display-4">Opera Bar Cookbook</h1>
+        <h1 class="display-4 ">Opera 
+            
+               
+            <span  class="display-4 cb-bar" >
+                Bar</span>
+              <span class="cb-kitchen">Kitchen</span><span class="cb-book">Cookbook</span>
+            </h1>
     </div>
 
     <nav>
-        <div class="nav nav-tabs" id="nav-tab" role="tablist">
-            <button class="nav-link active" id="nav-cocktail-tab" data-bs-toggle="tab" data-bs-target="#nav-cocktails" type="button" role="tab" aria-controls="nav-cocktails" aria-selected="true">Cocktails</button>
-            <button class="nav-link" id="nav-pending-tab" data-bs-toggle="tab" data-bs-target="#nav-pending" type="button" role="tab" aria-controls="nav-pending" aria-selected="false">Pending Task List</button>
-            <button class="nav-link" id="nav-completed-tab" data-bs-toggle="tab" data-bs-target="#nav-completed" type="button" role="tab" aria-controls="nav-completed" aria-selected="false">Completed Task List</button>
+        <div class="nav nav-tabs  " id="nav-tab" role="tablist">
+            <button class="nav-link cb-nav-tab active" id="nav-cocktail-tab" data-bs-toggle="tab" data-bs-target="#nav-cocktails" type="button" role="tab" aria-controls="nav-cocktails" aria-selected="true">Cocktails</button>
+            <button class="nav-link cb-nav-tab" id="nav-pending-tab" data-bs-toggle="tab" data-bs-target="#nav-pending" type="button" role="tab" aria-controls="nav-pending" aria-selected="false">Pending Task List</button>
+            <button class="nav-link cb-nav-tab" id="nav-completed-tab" data-bs-toggle="tab" data-bs-target="#nav-completed" type="button" role="tab" aria-controls="nav-completed" aria-selected="false">Completed Task List</button>
 
         </div>
     </nav>
     <div class="tab-content" id="nav-tabContent">
-        <div class="tab-pane fade show active" id="nav-cocktails" role="tabpanel" aria-labelledby="nav-cocktail-tab"><partial name="_CocktailCardPartial" model="Model.Cocktails" /></div>
-        <div class="tab-pane fade" id="nav-pending" role="tabpanel" aria-labelledby="nav-pending-tab"><p>This is a list of current tasks. If a task has been marked in error, it can be found on the Jobs page</p><partial name="~/Views/Shared/JobPartials/_JobsPartial.cshtml" model="Model.Jobs" /> </div>
-        <div class="tab-pane fade" id="nav-completed" role="tabpanel" aria-labelledby="nav-completed-tab">Completed Tasks can be found here<partial name="~/Views/Shared/JobPartials/_CompletedJobsPartial.cshtml" model="Model.CompletedJobs" /></div>
+        <div class="tab-pane fade show active" id="nav-cocktails" role="tabpanel" aria-labelledby="nav-cocktail-tab"><partial name="~/Views/Shared/CocktailPartials/_CocktailViewPartial.cshtml" model="Model.Cocktails" /></div>
+        <div class="tab-pane fade" id="nav-pending" role="tabpanel" aria-labelledby="nav-pending-tab"><p>This is a list of current tasks. If a task has been marked in error, it can be found on the Tasks page</p><partial name="~/Views/Shared/TaskPartials/_TasksPartial.cshtml" model="Model.Tasks" /> </div>
+        <div class="tab-pane fade" id="nav-completed" role="tabpanel" aria-labelledby="nav-completed-tab">Completed Tasks can be found here<partial name="~/Views/Shared/TaskPartials/_CompletedTasksPartial.cshtml" model="Model.CompletedTasks" /></div>
 
     </div>
     <div>
