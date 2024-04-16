@@ -182,6 +182,33 @@ namespace CocktailCookbook.Migrations
                     b.ToTable("Post");
                 });
 
+            modelBuilder.Entity("CocktailCookbook.Models.Premix", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Ingredients")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Method")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ParWeekday")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ParWeekend")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Premix");
+                });
+
             modelBuilder.Entity("CocktailCookbook.Models.Task", b =>
                 {
                     b.Property<int>("Id")
